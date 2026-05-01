@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Driver Check In Admin — The Hive</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Condensed:wght@600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ─────────────────────────────────────────────────── */
+:root {
+  --g-primary:  #6B7C2E;
+  --g-dark:     #4A5620;
+  --g-light:    #8FA03A;
+  --g-muted:    #EEF1E0;
+  --g-xlight:   #F7F9EE;
+  --topbar:     #1C1E18;
+  --grey-900:   #1A1C17;
+  --grey-700:   #3D4035;
+  --grey-500:   #6B6E62;
+  --grey-300:   #B8BAB3;
+  --grey-100:   #EBEBEA;
+  --grey-50:    #F5F5F4;
+  --white:      #FFFFFF;
+  --s-critical: #C0392B;
+  --s-warning:  #C87A00;
+  --s-safe:     #2E7D32;
+  --s-c-bg:     #FDECEA;
+  --s-w-bg:     #FFF3CD;
+  --s-s-bg:     #E8F5E9;
+  --sh-sm:  0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --sh-md:  0 4px 14px rgba(0,0,0,.09);
+  --sh-modal: 0 20px 60px rgba(0,0,0,.22);
+}
+
+/* ── RESET ──────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Roboto', sans-serif;
+  background: #EFEFED;
+  color: var(--grey-900);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* ── PAGE CHROME ─────────────────────────────────────────────── */
+.page-header {
+  background: var(--topbar);
+  padding: 24px 40px 20px;
+  text-align: center;
+  border-bottom: 3px solid var(--g-primary);
+}
+.logo-inline { display: inline-flex; align-items: center; gap: 9px; margin-bottom: 10px; }
+.wordmark { font: 700 20px/1 'Roboto Condensed', sans-serif; color: #fff; letter-spacing: 0.3px; }
+.tri-wrap { display: flex; align-items: flex-end; gap: 2px; }
+.tri-a { width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-bottom:15px solid #8FA03A; }
+.tri-b { width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:10px solid #BFD44A;margin-bottom:2px; }
+.page-header h1 { font:700 13px/1 'Roboto Condensed',sans-serif; color:rgba(255,255,255,.5); text-transform:uppercase; letter-spacing:.5px; }
+.page-header .sub { font:400 10px/1 'Roboto',sans-serif; color:rgba(255,255,255,.28); margin-top:4px; }
+
+.sprint-heading { text-align:center; padding:28px 0 4px; }
+.sprint-heading h2 { font:700 17px/1 'Roboto Condensed',sans-serif; color:var(--grey-900); }
+.sprint-heading p  { font:400 10px/1 'Roboto',sans-serif; color:var(--grey-500); margin-top:4px; }
+.subsec { font:600 10.5px/1 'Roboto',sans-serif; color:var(--g-primary); text-align:center; padding:14px 0 10px; }
+
+.grid { display:flex; flex-wrap:wrap; justify-content:center; gap:20px; padding:0 24px 28px; }
+
+.page-footer {
+  text-align:center; padding:24px 40px;
+  background:var(--topbar);
+  color:rgba(255,255,255,.3);
+  font:400 10px/1.8 'Roboto',sans-serif;
+  border-top:2px solid var(--g-primary);
+  margin-top:16px;
+}
+.page-footer strong { color:rgba(255,255,255,.55); }
+
+/* ── FRAMES ──────────────────────────────────────────────────── */
+.frame {
+  background: var(--white);
+  border-radius: 8px;
+  border: 1px solid var(--grey-100);
+  overflow: hidden;
+  box-shadow: var(--sh-md);
+  display: flex;
+  flex-direction: column;
+}
+.frame.xl  { width: 1000px; min-height: 600px; }
+.frame.md  { width: 480px;  min-height: 300px; }
+.frame.ref { width: 720px;  min-height: auto; }
+
+.frame-note {
+  font:400 8.5px/1.4 'Roboto Mono',monospace;
+  color:var(--grey-500);
+  background:var(--grey-50);
+  border-top:1px solid var(--grey-100);
+  padding:5px 12px;
+  flex-shrink:0;
+}
+
+/* ── TOPBAR ──────────────────────────────────────────────────── */
+.topbar {
+  height: 44px;
+  background: var(--topbar);
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.t-logo { display:flex; align-items:center; gap:7px; }
+.t-tri-wrap { display:flex; align-items:flex-end; gap:1px; }
+.t-tri-b { width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:10px solid #8FA03A; }
+.t-tri-s { width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-bottom:7px solid #BFD44A;margin-bottom:1px; }
+.t-wordmark { font:700 13px/1 'Roboto Condensed',sans-serif; color:#fff; letter-spacing:.4px; }
+.topbar .spacer { flex:1; }
+.facility-chip {
+  font:400 9px/1 'Roboto',sans-serif;
+  color:rgba(255,255,255,.45);
+  background:rgba(255,255,255,.07);
+  border-radius:3px; padding:3px 8px;
+  display:flex; align-items:center; gap:4px;
+}
+.avatar {
+  width:26px; height:26px; border-radius:50%;
+  background:var(--g-primary);
+  font:700 9px/1 'Roboto',sans-serif; color:#fff;
+  display:flex; align-items:center; justify-content:center;
+}
+
+/* Tab bar inside topbar */
+.tab-bar { display:flex; gap:0; margin-left:14px; }
+.tab-item {
+  padding: 0 14px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  font:400 10px/1 'Roboto',sans-serif;
+  color: rgba(255,255,255,.4);
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color .15s, border-color .15s;
+  white-space: nowrap;
+}
+.tab-item:hover { color:rgba(255,255,255,.7); }
+.tab-item.active {
+  color: #fff;
+  border-bottom-color: var(--g-light);
+  font-weight: 500;
+}
+
+/* ── LAYOUT ──────────────────────────────────────────────────── */
+.app-body { display:flex; flex:1; overflow:hidden; }
+
+/* ── SIDEBAR ─────────────────────────────────────────────────── */
+.sidebar {
+  width: 180px;
+  background: var(--white);
+  border-right: 1px solid var(--grey-100);
+  padding: 10px 0;
+  flex-shrink: 0;
+}
+.nav-group {
+  font:700 8.5px/1 'Roboto',sans-serif;
+  color:var(--grey-300); text-transform:uppercase;
+  letter-spacing:.8px; padding:10px 12px 4px;
+}
+.nav-item {
+  display:flex; align-items:center; gap:7px;
+  padding:6px 12px;
+  font:400 10.5px/1 'Roboto',sans-serif;
+  color:var(--grey-700); text-decoration:none; cursor:pointer;
+  transition:background .12s, color .12s;
+}
+.nav-item:hover { background:var(--g-xlight); color:var(--g-primary); }
+.nav-item.active {
+  background:var(--g-muted); color:var(--g-dark);
+  font-weight:500; border-right:2px solid var(--g-primary);
+}
+
+/* ── MAIN ────────────────────────────────────────────────────── */
+.main { flex:1; padding:16px; overflow-y:auto; background:var(--grey-50); }
+
+/* ── CARD ────────────────────────────────────────────────────── */
+.card {
+  background:var(--white);
+  border:1px solid var(--grey-100);
+  border-radius:6px;
+  box-shadow:var(--sh-sm);
+  margin-bottom:10px;
+  overflow:hidden;
+}
+
+/* ── SETTING ROW ─────────────────────────────────────────────── */
+.setting {
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+  padding:14px 16px;
+  border-bottom:1px solid var(--grey-50);
+}
+.setting:last-child { border-bottom:none; }
+.setting .toggle-col { padding-top:1px; flex-shrink:0; }
+.setting .content-col { flex:1; min-width:0; }
+.setting-name {
+  font:600 11.5px/1.3 'Roboto',sans-serif;
+  color:var(--grey-900); margin-bottom:3px;
+}
+.setting-help {
+  font:400 9.5px/1.4 'Roboto',sans-serif;
+  color:var(--grey-500); font-style:italic; margin-top:4px;
+}
+
+/* ── FORM ELEMENTS ───────────────────────────────────────────── */
+.form-input, .form-select, .form-textarea {
+  width:100%;
+  height:28px;
+  padding:0 9px;
+  border:1px solid var(--grey-300);
+  border-radius:4px;
+  font:400 10.5px/1.4 'Roboto',sans-serif;
+  color:var(--grey-900);
+  background:var(--white);
+  margin-top:5px;
+  transition:border-color .15s, box-shadow .15s;
+}
+.form-input:focus, .form-textarea:focus {
+  outline:none;
+  border-color:var(--g-primary);
+  box-shadow:0 0 0 2px rgba(107,124,46,.15);
+}
+.form-input:disabled, .form-textarea:disabled {
+  background:var(--grey-50);
+  color:var(--grey-300);
+  cursor:not-allowed;
+}
+.form-input.err { border-color:var(--s-critical); }
+.form-textarea { height:62px; padding:7px 9px; resize:vertical; }
+.form-textarea.err { border-color:var(--s-critical); }
+.form-error {
+  font:400 9px/1 'Roboto',sans-serif;
+  color:var(--s-critical); margin-top:3px;
+  display:flex; align-items:center; gap:3px;
+}
+
+/* ── BUTTONS ─────────────────────────────────────────────────── */
+.btn {
+  display:inline-flex; align-items:center; justify-content:center; gap:5px;
+  border:none; border-radius:4px; cursor:pointer;
+  font:500 10.5px/1 'Roboto',sans-serif;
+  transition:background .14s, border-color .14s, color .14s;
+  white-space:nowrap;
+  height:28px; padding:0 12px;
+}
+.btn-primary   { background:var(--g-primary); color:#fff; }
+.btn-primary:hover { background:var(--g-dark); }
+.btn-secondary { background:transparent; color:var(--grey-700); border:1px solid var(--grey-300); }
+.btn-secondary:hover { border-color:var(--g-primary); color:var(--g-primary); }
+.btn-dark      { background:var(--topbar); color:#fff; }
+.btn-dark:hover { background:#2a2d22; }
+
+/* ── BADGES ──────────────────────────────────────────────────── */
+.badge {
+  display:inline-flex; align-items:center;
+  padding:2px 7px; border-radius:999px;
+  font:600 8.5px/1.4 'Roboto',sans-serif;
+  letter-spacing:.4px; text-transform:uppercase;
+}
+.badge-safe     { background:var(--s-s-bg); color:var(--s-safe); }
+.badge-neutral  { background:var(--grey-100); color:var(--grey-500); }
+.badge-critical { background:var(--s-c-bg); color:var(--s-critical); }
+.badge-warning  { background:var(--s-w-bg); color:var(--s-warning); }
+
+/* ────────────────────────────────────────────────────────────── 
+   TOGGLE SWITCH — FIXED
+   
+   Bug in original: input had width:0; height:0; which made it
+   unclickable even though opacity was 0. The label wrapper
+   did not propagate clicks reliably in all browsers when the
+   associated input has zero dimensions and is not in the flow.
+   
+   Fix: position the input to cover the entire toggle track
+   so the click target is correct, keeping it visually hidden
+   via opacity:0. Also ensure pointer-events work on the label.
+────────────────────────────────────────────────────────────── */
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 22px;
+  flex-shrink: 0;
+}
+/* Hidden checkbox — positioned to fill the toggle area */
+.toggle input[type="checkbox"] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  margin: 0;
+  cursor: pointer;
+  z-index: 1;   /* sits above slider so clicks register */
+}
+.toggle input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+}
+/* Track */
+.slider {
+  position: absolute;
+  inset: 0;
+  background: var(--grey-300);
+  border-radius: 22px;
+  transition: background .25s ease;
+  pointer-events: none; /* clicks pass through to the input */
+}
+/* Knob */
+.slider::before {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  left: 3px;
+  top: 3px;
+  background: var(--white);
+  border-radius: 50%;
+  transition: transform .25s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,.25);
+}
+/* ON state */
+.toggle input[type="checkbox"]:checked + .slider {
+  background: var(--g-primary);
+}
+.toggle input[type="checkbox"]:checked + .slider::before {
+  transform: translateX(16px);
+}
+/* Disabled dimming */
+.toggle input[type="checkbox"]:disabled + .slider {
+  opacity: .5;
+}
+/* Locked-ON: green but not interactive */
+.toggle input[type="checkbox"]:checked:disabled + .slider {
+  background: var(--g-primary);
+  opacity: .55;
+}
+/* Focus ring */
+.toggle input[type="checkbox"]:focus-visible + .slider {
+  outline: 2px solid var(--g-primary);
+  outline-offset: 2px;
+}
+
+/* ── TOOLBAR ─────────────────────────────────────────────────── */
+.toolbar {
+  display:flex; justify-content:space-between;
+  align-items:center; margin-bottom:12px;
+}
+.page-title { font:700 15px/1 'Roboto Condensed',sans-serif; color:var(--grey-900); }
+.auto-save-note { font:400 9px/1 'Roboto',sans-serif; color:var(--grey-300); font-style:italic; }
+
+/* ── TABLE ───────────────────────────────────────────────────── */
+.ref-table { width:100%; border-collapse:collapse; font-size:10.5px; }
+.ref-table th {
+  text-align:left; padding:7px 10px;
+  background:var(--grey-50);
+  border-bottom:1.5px solid var(--grey-100);
+  font:600 8.5px/1 'Roboto',sans-serif;
+  color:var(--grey-500); text-transform:uppercase; letter-spacing:.5px;
+}
+.ref-table td { padding:7px 10px; border-bottom:1px solid var(--grey-50); }
+.ref-table tr:last-child td { border-bottom:none; }
+.ref-table tr:hover td { background:var(--g-xlight); }
+.ref-table td:not(:first-child) { text-align:center; }
+
+/* ── MODAL ───────────────────────────────────────────────────── */
+.modal-overlay {
+  position:absolute; inset:0;
+  background:rgba(26,28,23,.45);
+  display:flex; align-items:center; justify-content:center;
+  z-index:20;
+}
+.modal-box {
+  background:var(--white);
+  border-radius:8px; padding:22px;
+  width:360px;
+  box-shadow:var(--sh-modal);
+  text-align:center;
+}
+.modal-title {
+  font:700 13px/1.3 'Roboto Condensed',sans-serif;
+  color:var(--grey-900); margin-bottom:14px;
+}
+.qr-placeholder {
+  width:190px; height:190px;
+  margin:0 auto 14px;
+  background:var(--grey-50);
+  border:1.5px dashed var(--grey-300);
+  border-radius:6px;
+  display:flex; align-items:center; justify-content:center;
+}
+
+</style>
+</head>
+<body>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="logo-inline">
+    <div class="tri-wrap"><div class="tri-a"></div><div class="tri-b"></div></div>
+    <div class="wordmark">The Hive™</div>
+  </div>
+  <h1>Driver Check In Admin</h1>
+  <div class="sub">Administrative Module · Driver Check In Set Up · Schreiber Horizon</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--  MAIN PAGE: Full Settings View                     -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="sprint-heading">
+  <h2>Driver Check In Admin Page — Full Settings View</h2>
+  <p>Administration → Driver Check In Set Up · Admin role only · Opens in new Hive tab</p>
+</div>
+
+<div class="grid">
+<div class="frame xl">
+
+  <!-- TOPBAR WITH TABS -->
+  <div class="topbar">
+    <div class="t-logo">
+      <div class="t-tri-wrap"><div class="t-tri-b"></div><div class="t-tri-s"></div></div>
+      <div class="t-wordmark">The Hive™</div>
+    </div>
+    <div class="tab-bar">
+      <div class="tab-item">Inventory</div>
+      <div class="tab-item">Work Orders</div>
+      <div class="tab-item active">Driver Check In Admin</div>
+    </div>
+    <div class="spacer"></div>
+    <div class="facility-chip">
+      <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+      Green Bay, WI
+    </div>
+    <div class="avatar">JS</div>
+  </div>
+
+  <!-- BODY -->
+  <div class="app-body">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+      <div class="nav-group">Administration</div>
+      <a class="nav-item">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Users
+      </a>
+      <a class="nav-item">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        Facilities
+      </a>
+      <a class="nav-item active">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        Driver Check In Set Up
+      </a>
+      <a class="nav-item">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </a>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+      <div class="toolbar">
+        <span class="page-title">Driver Check In Admin</span>
+        <span class="auto-save-note">Changes auto-saved on focus out</span>
+      </div>
+
+      <div class="card">
+
+        <!-- 1. Organization Name -->
+        <div class="setting">
+          <div class="toggle-col">
+            <label class="toggle" aria-label="Organization Name — always on">
+              <input type="checkbox" checked disabled>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="content-col">
+            <div class="setting-name">Organization Name</div>
+            <input class="form-input" type="text" value="Schreiber Foods - Green Bay" disabled>
+            <div class="setting-help">Pre-populated from user login. Toggle always ON.</div>
+          </div>
+        </div>
+
+        <!-- 2. QR Code Check In Access -->
+        <div class="setting">
+          <div class="toggle-col">
+            <label class="toggle" aria-label="QR Code Check In Access">
+              <input type="checkbox" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="content-col">
+            <div class="setting-name">QR Code Check In Access</div>
+            <div style="margin-top:7px">
+              <button class="btn btn-primary">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h.01M14 17h3M17 14h3M17 17v4M20 14v.01"/></svg>
+                Generate QR Code
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Driver Name -->
+        <div class="setting">
+          <div class="toggle-col">
+            <label class="toggle" aria-label="Driver Name — always on">
+              <input type="checkbox" checked disabled>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="content-col">
+            <div class="setting-name">Driver Name</div>
+            <div class="setting-help">Always required. Toggle always ON.</div>
+          </div>
+        </div>
+
+        <!-- 4. Driver ID -->
+        <div class="setting">
+          <div class="toggle-col">
+            <label class="toggle" aria-label="Driver ID">
+              <input type="checkbox" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="content-col">
+            <div class="setting-name">Driver ID</div>
+            <div class="setting-help">Toggle active — can be disabled if not required.</div>
+          </div>
+        </div>
+
+        <!-- 5. Driver Phone Number -->
+        <div class="setting">
+          <div class="toggle-col">
+            <label class="toggle" aria-label="Driver Phone Number — always on">
+              <input type="checkbox" checked disabled>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="content-col">
+            <div class="setting-name">Driver Phone Number</div>
+            <div class="setting-help">Always required. Toggle always ON.</div>
+          </div>
+        </div>
+
+        <!-- 6. Truck Number -->
+        <div class="setting">
+          <div class="toggle-col">
+            <label class="toggle" aria-label="Truck Number — always on">
+              <input type="checkbox" checked disabled>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="content-col">
+            <div class="setting-name">Truck Number</div>
+            <div class="setting-help">Always required. Toggle always ON.</div>
+          </div>
+        </div>
+
+        <!-- 7. Carrier Approval Step -->
+        <div class="setting">
+          <div class="toggle-col">
+            <label class="toggle" aria-label="Carrier Approval Step">
+              <input type="checkbox" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="content-col">
+            <div class="setting-name">Carrier Approval Step</div>
+            <div class="setting-help">Toggle active — disable to skip carrier approval during check-in.</div>
+          </div>
+        </div>
+
+        <!-- 8. Temperature Acknowledgement -->
+        <div class="setting">
+          <div class="toggle-col">
+            <label class="toggle" aria-label="Temperature Acknowledgement Step">
+              <input type="checkbox" id="toggle-temp" onchange="handleTempToggle(this)">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="content-col">
+            <div class="setting-name">Temperature Acknowledgement Step</div>
+            <input class="form-input" id="input-temp" type="text" placeholder="e.g., 35°F – 40°F" disabled>
+            <div class="setting-help">Add the temperature requirements to display during check-in via mobile app. Note: a temperature violation will not block the driver from completing check-in.</div>
+          </div>
+        </div>
+
+        <!-- 9. Early Check In Step -->
+        <div class="setting">
+          <div class="toggle-col">
+            <label class="toggle" aria-label="Early Check In Step">
+              <input type="checkbox" id="toggle-early" onchange="handleEarlyToggle(this)">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="content-col">
+            <div class="setting-name">Early Check In Step</div>
+            <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
+              <label style="font:400 9.5px/1 'Roboto',sans-serif;color:var(--grey-500);white-space:nowrap">Allowed Early Hours:</label>
+              <input class="form-input" id="input-hours" type="text" placeholder="e.g., 2" disabled style="width:60px;margin-top:0">
+            </div>
+            <div style="margin-top:8px">
+              <label style="font:600 9.5px/1 'Roboto',sans-serif;color:var(--grey-700)">Early Check In Instruction:</label>
+            </div>
+            <textarea class="form-textarea" id="input-instruction" disabled placeholder="Instruction text for early arrivals...">Due to earlier arrival time, you cannot check in via regular process. Please contact Facility Administrator directly via phone number {TRAFFIC_CLERK_PHONE}</textarea>
+            <div class="setting-help">This instruction will be displayed to the driver in the mobile app if the early check-in hours limit is violated.</div>
+          </div>
+        </div>
+
+        <!-- 10. Confirmation Step -->
+        <div class="setting">
+          <div class="toggle-col">
+            <label class="toggle" aria-label="Confirmation Step">
+              <input type="checkbox" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="content-col">
+            <div class="setting-name">Confirmation Step</div>
+            <div style="margin-top:6px">
+              <label style="font:600 9.5px/1 'Roboto',sans-serif;color:var(--grey-700)">Successful Check In Confirmation Text:</label>
+            </div>
+            <textarea class="form-textarea">Driver Check In is successfully completed! Please wait for the call from Traffic Clerk for Dock assignment and further instructions.</textarea>
+            <div class="setting-help">This message is displayed to the driver in the mobile app upon successful check-in completion.</div>
+          </div>
+        </div>
+
+      </div><!-- /card -->
+
+      <div class="frame-note" style="border-radius:4px;margin-top:0">
+        <strong>Behaviour:</strong> All text fields auto-save on focus out · Toggles enable/disable both admin page fields AND mobile app steps &nbsp;|&nbsp;
+        <strong>Validation:</strong> Empty required fields → "A value is required" · Non-numeric hours → "Numbers only" · Invalid temp format → "Invalid format" &nbsp;|&nbsp;
+        <strong>Access:</strong> Admin role only · Opens in new Hive tab &nbsp;|&nbsp;
+        <strong>A11Y:</strong> All toggles have aria-label · Disabled toggles announced as "always on" · Help text linked via aria-describedby
+      </div>
+    </main>
+  </div>
+</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--  VALIDATION STATES                                 -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="sprint-heading">
+  <h2>Validation States</h2>
+  <p>Temperature Acknowledgement &amp; Early Check In</p>
+</div>
+
+<div class="grid">
+
+  <!-- Temperature ON + Validation Errors -->
+  <div class="frame md">
+    <div style="padding:16px;flex:1">
+      <div style="font:700 12px/1 'Roboto Condensed',sans-serif;color:var(--grey-900);margin-bottom:10px">Temperature Acknowledgement — ON + Validation Errors</div>
+
+      <div class="card" style="margin-bottom:10px">
+        <div class="setting" style="border:none">
+          <div class="toggle-col">
+            <label class="toggle"><input type="checkbox" checked><span class="slider"></span></label>
+          </div>
+          <div class="content-col">
+            <div class="setting-name">Temperature Acknowledgement Step</div>
+            <input class="form-input err" type="text" value="">
+            <div class="form-error">
+              <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              A value is required
+            </div>
+            <div class="setting-help">Shown when field is empty on focus out</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="setting" style="border:none">
+          <div class="toggle-col">
+            <label class="toggle"><input type="checkbox" checked><span class="slider"></span></label>
+          </div>
+          <div class="content-col">
+            <div class="setting-name">Temperature Acknowledgement Step</div>
+            <input class="form-input err" type="text" value="abc!@#">
+            <div class="form-error">
+              <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Invalid format
+            </div>
+            <div class="setting-help">Shown when value doesn't match expected temperature format</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="frame-note">Toggle ON → input enabled → validation on focus out: empty → "A value is required", invalid → "Invalid format"</div>
+  </div>
+
+  <!-- Early Check In ON + Validation -->
+  <div class="frame md">
+    <div style="padding:16px;flex:1">
+      <div style="font:700 12px/1 'Roboto Condensed',sans-serif;color:var(--grey-900);margin-bottom:10px">Early Check In — ON + Hours Validation</div>
+
+      <div class="card">
+        <div class="setting" style="border:none">
+          <div class="toggle-col">
+            <label class="toggle"><input type="checkbox" checked><span class="slider"></span></label>
+          </div>
+          <div class="content-col">
+            <div class="setting-name">Early Check In Step</div>
+            <div style="display:flex;gap:8px;align-items:flex-start;margin-top:6px">
+              <label style="font:400 9.5px/1 'Roboto',sans-serif;color:var(--grey-500);white-space:nowrap;padding-top:8px">Allowed Early Hours:</label>
+              <div>
+                <input class="form-input err" type="text" value="abc" style="width:60px;margin-top:0">
+                <div class="form-error">
+                  <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  Numbers only
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:8px">
+              <label style="font:600 9.5px/1 'Roboto',sans-serif;color:var(--grey-700)">Early Check In Instruction:</label>
+            </div>
+            <textarea class="form-textarea err"></textarea>
+            <div class="form-error">
+              <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              A value is required
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="frame-note">Toggle ON → all fields enabled → validation on focus out: numbers only for hours, required for instruction</div>
+  </div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--  QR CODE GENERATION MODAL                          -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="sprint-heading">
+  <h2>QR Code Generation Modal</h2>
+  <p>Triggered by "Generate QR Code" button · New code generated on each open</p>
+</div>
+
+<div class="grid">
+  <div class="frame md" style="position:relative;min-height:440px">
+    <div class="topbar">
+      <div class="t-logo">
+        <div class="t-tri-wrap"><div class="t-tri-b"></div><div class="t-tri-s"></div></div>
+        <div class="t-wordmark">The Hive™</div>
+      </div>
+    </div>
+    <div style="flex:1;background:var(--grey-50);filter:blur(2px)"></div>
+    <div class="modal-overlay">
+      <div class="modal-box">
+        <div class="modal-title">
+          QR Code for Schreiber Foods - Green Bay<br>Driver Check In Access
+        </div>
+        <!-- QR placeholder as SVG grid pattern -->
+        <div class="qr-placeholder">
+          <svg width="140" height="140" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+            <rect width="140" height="140" fill="#F5F5F4"/>
+            <!-- Corner squares -->
+            <rect x="10" y="10" width="30" height="30" rx="2" fill="#1A1C17"/>
+            <rect x="14" y="14" width="22" height="22" rx="1" fill="#F5F5F4"/>
+            <rect x="18" y="18" width="14" height="14" rx="1" fill="#1A1C17"/>
+            <rect x="100" y="10" width="30" height="30" rx="2" fill="#1A1C17"/>
+            <rect x="104" y="14" width="22" height="22" rx="1" fill="#F5F5F4"/>
+            <rect x="108" y="18" width="14" height="14" rx="1" fill="#1A1C17"/>
+            <rect x="10" y="100" width="30" height="30" rx="2" fill="#1A1C17"/>
+            <rect x="14" y="104" width="22" height="22" rx="1" fill="#F5F5F4"/>
+            <rect x="18" y="108" width="14" height="14" rx="1" fill="#1A1C17"/>
+            <!-- Centre hive logo hint -->
+            <rect x="58" y="58" width="24" height="24" rx="3" fill="white" stroke="#EBEBEA" stroke-width="1"/>
+            <!-- Simplified triangle logo mark -->
+            <polygon points="70,62 64,72 76,72" fill="#6B7C2E"/>
+            <polygon points="70,64 66,71 74,71" fill="#8FA03A"/>
+            <!-- Random data dots (decorative) -->
+            <rect x="50" y="10" width="4" height="4" fill="#1A1C17"/><rect x="56" y="10" width="4" height="4" fill="#1A1C17"/><rect x="62" y="10" width="4" height="4" fill="#1A1C17"/>
+            <rect x="50" y="16" width="4" height="4" fill="#1A1C17"/><rect x="68" y="16" width="4" height="4" fill="#1A1C17"/>
+            <rect x="56" y="22" width="4" height="4" fill="#1A1C17"/><rect x="62" y="22" width="4" height="4" fill="#1A1C17"/>
+            <rect x="10" y="50" width="4" height="4" fill="#1A1C17"/><rect x="10" y="56" width="4" height="4" fill="#1A1C17"/>
+            <rect x="16" y="62" width="4" height="4" fill="#1A1C17"/><rect x="22" y="50" width="4" height="4" fill="#1A1C17"/>
+            <rect x="126" y="50" width="4" height="4" fill="#1A1C17"/><rect x="120" y="56" width="4" height="4" fill="#1A1C17"/>
+            <rect x="126" y="62" width="4" height="4" fill="#1A1C17"/><rect x="120" y="68" width="4" height="4" fill="#1A1C17"/>
+            <rect x="50" y="126" width="4" height="4" fill="#1A1C17"/><rect x="56" y="120" width="4" height="4" fill="#1A1C17"/>
+            <rect x="62" y="126" width="4" height="4" fill="#1A1C17"/><rect x="68" y="120" width="4" height="4" fill="#1A1C17"/>
+            <rect x="80" y="10" width="4" height="4" fill="#1A1C17"/><rect x="86" y="16" width="4" height="4" fill="#1A1C17"/>
+            <rect x="80" y="50" width="4" height="4" fill="#1A1C17"/><rect x="86" y="56" width="4" height="4" fill="#1A1C17"/>
+            <rect x="80" y="80" width="4" height="4" fill="#1A1C17"/><rect x="86" y="86" width="4" height="4" fill="#1A1C17"/>
+          </svg>
+        </div>
+        <div style="font:400 9.5px/1.5 'Roboto',sans-serif;color:var(--grey-500);margin-bottom:16px">
+          Scan this QR code to access Driver Check In for this facility.
+        </div>
+        <div style="display:flex;gap:8px;justify-content:center">
+          <button class="btn btn-primary">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Save as PDF
+          </button>
+          <button class="btn btn-dark">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Print
+          </button>
+          <button class="btn btn-secondary">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="frame-note" style="position:absolute;bottom:0;left:0;right:0;z-index:30">
+      <strong>Generate QR Code:</strong> Always active · Opens modal with freshly-generated QR code &nbsp;|&nbsp;
+      <strong>Save as PDF:</strong> Auto-downloads PDF &nbsp;|&nbsp;
+      <strong>Print:</strong> Opens system dialog &nbsp;|&nbsp;
+      <strong>Close:</strong> Dismisses modal &nbsp;|&nbsp;
+      <strong>A11Y:</strong> Focus-trapped, Escape to close, QR has alt text
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--  TOGGLE STATES REFERENCE TABLE                     -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="sprint-heading">
+  <h2>Settings Toggle Reference</h2>
+  <p>Default configuration · Editability · Field types</p>
+</div>
+
+<div class="grid">
+  <div class="frame ref">
+    <div style="padding:16px">
+      <div style="font:700 13px/1 'Roboto Condensed',sans-serif;color:var(--grey-900);margin-bottom:12px">Toggle States &amp; Default Configuration</div>
+      <table class="ref-table">
+        <thead>
+          <tr>
+            <th style="text-align:left">Setting</th>
+            <th>Default</th>
+            <th>Toggle Editable</th>
+            <th>Has Input</th>
+            <th>Has Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Organization Name</td>
+            <td><span class="badge badge-safe">ON</span></td>
+            <td><span class="badge badge-neutral">Locked</span></td>
+            <td style="color:var(--grey-500);font-size:9.5px">Text (disabled, pre-populated)</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>QR Code Check In Access</td>
+            <td><span class="badge badge-safe">ON</span></td>
+            <td><span class="badge badge-safe">Yes</span></td>
+            <td>—</td>
+            <td style="color:var(--grey-500);font-size:9.5px">Generate QR Code</td>
+          </tr>
+          <tr>
+            <td>Driver Name</td>
+            <td><span class="badge badge-safe">ON</span></td>
+            <td><span class="badge badge-neutral">Locked</span></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Driver ID</td>
+            <td><span class="badge badge-safe">ON</span></td>
+            <td><span class="badge badge-safe">Yes</span></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Driver Phone Number</td>
+            <td><span class="badge badge-safe">ON</span></td>
+            <td><span class="badge badge-neutral">Locked</span></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Truck Number</td>
+            <td><span class="badge badge-safe">ON</span></td>
+            <td><span class="badge badge-neutral">Locked</span></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Carrier Approval Step</td>
+            <td><span class="badge badge-safe">ON</span></td>
+            <td><span class="badge badge-safe">Yes</span></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Temperature Acknowledgement</td>
+            <td><span class="badge badge-neutral">OFF</span></td>
+            <td><span class="badge badge-safe">Yes</span></td>
+            <td style="color:var(--grey-500);font-size:9.5px">Temp range (alphanumeric)</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Early Check In Step</td>
+            <td><span class="badge badge-neutral">OFF</span></td>
+            <td><span class="badge badge-safe">Yes</span></td>
+            <td style="color:var(--grey-500);font-size:9.5px">Hours (numeric) + Instruction (text)</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Confirmation Step</td>
+            <td><span class="badge badge-safe">ON</span></td>
+            <td><span class="badge badge-safe">Yes</span></td>
+            <td style="color:var(--grey-500);font-size:9.5px">Confirmation text (free text)</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- PAGE FOOTER -->
+<div class="page-footer">
+  <strong>The Hive™ — Driver Check In Admin</strong><br>
+  10 Settings · 3 Validation States · QR Code Modal · Auto-save on Focus Out<br>
+  Design: Roboto + Roboto Condensed · Green #6B7C2E · Dark #1C1E18 · WCAG 2.1 AA
+</div>
+
+<script>
+/* Toggle → enable/disable associated fields */
+function handleTempToggle(cb) {
+  document.getElementById('input-temp').disabled = !cb.checked;
+}
+function handleEarlyToggle(cb) {
+  const on = cb.checked;
+  document.getElementById('input-hours').disabled = !on;
+  document.getElementById('input-instruction').disabled = !on;
+}
+</script>
+</body>
+</html>
