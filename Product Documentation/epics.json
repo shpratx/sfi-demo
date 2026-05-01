@@ -1,0 +1,614 @@
+{
+  "product_name": "Driver Check In App \u2014 Administrative Module (The Hive, Schreiber Foods)",
+  "total_epics": 5,
+  "total_features": 18,
+  "delivery_sprints": 4,
+  "epics": [
+    {
+      "epic_id": "EP-01",
+      "title": "Platform Foundation, Auth & Organization Setup",
+      "description": "Build the technical foundation: authentication, role management (Admin vs Standard), organization data model, and the HIVE navigation framework with tab system. At sprint end: admin users can log in, see the Administration menu, and manage organizations.",
+      "sprint": 1,
+      "requirements_covered": [
+        "FR-17",
+        "FR-18",
+        "FR-19",
+        "FR-01"
+      ],
+      "scope_in": [
+        "User authentication (email/password or SSO)",
+        "Role management (Admin, Standard User)",
+        "Organization CRUD and user-org assignment",
+        "HIVE Administration menu with dropdown navigation",
+        "In-app tab system (open pages in new HIVE tabs)",
+        "Health endpoints",
+        "CI/CD pipeline, Docker setup"
+      ],
+      "scope_out": [
+        "Driver check-in settings",
+        "QR code generation",
+        "Mobile app API"
+      ],
+      "definition_of_done": "Admin can log in, see Administration menu, open Driver Check In Set Up in new tab, manage organizations. Non-admin cannot see admin menu.",
+      "reasoning": "Foundation must come first \u2014 auth, roles, and org model are prerequisites for all settings features. Navigation framework (menu + tabs) is needed before any admin page can be built. Deployable as v0.1.",
+      "features": [
+        {
+          "feature_id": "F-01.1",
+          "title": "Authentication & Session Management",
+          "description": "Login page (email/password), JWT token issuance, session management, logout. Protected route middleware.",
+          "requirements_covered": [
+            "FR-17"
+          ],
+          "nfrs_applicable": [
+            "NFR-04"
+          ],
+          "user_facing": true,
+          "data_sensitivity": "Restricted",
+          "change_type": "new"
+        },
+        {
+          "feature_id": "F-01.2",
+          "title": "Role Management & Admin Authorization",
+          "description": "Two roles: Admin and Standard User. Admin role gates Administration menu visibility and API access. Non-admin gets 403 on admin endpoints.",
+          "requirements_covered": [
+            "FR-18"
+          ],
+          "nfrs_applicable": [
+            "NFR-04"
+          ],
+          "user_facing": true,
+          "data_sensitivity": "Restricted",
+          "change_type": "new"
+        },
+        {
+          "feature_id": "F-01.3",
+          "title": "Organization Data Model & Management",
+          "description": "Organization CRUD: name, address, phone (for {TRAFFIC_CLERK_PHONE}). User-to-org assignment. Org context from authenticated user session.",
+          "requirements_covered": [
+            "FR-19"
+          ],
+          "nfrs_applicable": [],
+          "user_facing": true,
+          "data_sensitivity": "Internal",
+          "change_type": "new"
+        },
+        {
+          "feature_id": "F-01.4",
+          "title": "HIVE Navigation Framework & Tab System",
+          "description": "Administration menu with dropdown options. In-app tab system \u2014 selecting 'Driver Check In Set Up' opens a new tab with title 'Driver Check In Admin'. Tab management (open, close, switch).",
+          "requirements_covered": [
+            "FR-01"
+          ],
+          "nfrs_applicable": [
+            "NFR-03"
+          ],
+          "user_facing": true,
+          "data_sensitivity": "Public",
+          "change_type": "new"
+        }
+      ]
+    },
+    {
+      "epic_id": "EP-02",
+      "title": "Settings Framework & Core Check-In Settings",
+      "description": "Build the settings page framework (toggle list, auto-save, validation) and implement the core driver identity settings. At sprint end: admin can view the settings page with toggles for Organization, Driver Name/ID/Phone/Truck, and Carrier Approval \u2014 all persisted per org.",
+      "sprint": 2,
+      "requirements_covered": [
+        "FR-02",
+        "FR-03",
+        "FR-05",
+        "FR-06",
+        "FR-10",
+        "FR-11",
+        "FR-15",
+        "FR-20",
+        "FR-21",
+        "FR-23",
+        "FR-25"
+      ],
+      "scope_in": [
+        "Settings list UI with toggle controls",
+        "Organization Name setting (locked, pre-populated)",
+        "Driver identity settings (Name, ID, Phone, Truck)",
+        "Carrier Approval Step setting",
+        "Settings data model and DB schema",
+        "Settings admin API (GET/PUT)",
+        "Auto-save on focus out",
+        "Frontend validation on focus out",
+        "Help text display component",
+        "Page loading state (skeleton/spinner)",
+        "Settings persistence per organization"
+      ],
+      "scope_out": [
+        "Temperature setting",
+        "Early Check In setting",
+        "Confirmation setting",
+        "QR code",
+        "Mobile API"
+      ],
+      "definition_of_done": "Admin opens Driver Check In Admin tab, sees 6 settings with correct toggle states, can toggle Driver ID and Carrier Approval, changes auto-save on focus out, settings persist per org across page reloads.",
+      "reasoning": "Settings framework (toggle list, auto-save, validation, persistence) is the reusable foundation. Core identity settings are simple toggles \u2014 good for validating the framework. Deployable as v0.2.",
+      "features": [
+        {
+          "feature_id": "F-02.1",
+          "title": "Settings Page Framework & Toggle List",
+          "description": "Settings page layout with list of settings. Each setting: name label, toggle control, optional input area, optional action button. Toggle ON/OFF controls setting state. Page loading skeleton while API fetches.",
+          "requirements_covered": [
+            "FR-02",
+            "FR-25"
+          ],
+          "nfrs_applicable": [
+            "NFR-01",
+            "NFR-03"
+          ],
+          "user_facing": true,
+          "data_sensitivity": "Internal",
+          "change_type": "new"
+        },
+        {
+          "feature_id": "F-02.2",
+          "title": "Auto-Save & Validation Engine",
+          "description": "Auto-save all field values on focus out via PUT API. Validation on focus out: 'A value is required' (empty), 'Numbers only' (non-numeric), 'Invalid format' (bad format). Inline error display below field. Save confirmation indicator (brief checkmark).",
+          "requirements_covered": [
+            "FR-10",
+            "FR-11",
+            "FR-24"
+          ],
+          "nfrs_applicable": [
+            "NFR-01",
+            "NFR-02"
+          ],
+          "user_facing": true,
+          "data_sensitivity": "Internal",
+          "change_type": "new"
+        },
+        {
+          "feature_id": "F-02.3",
+          "title": "Settings Data Model, API & Persistence",
+          "description": "DB schema: settings table (setting_id, org_id, setting_name, toggle_state, input_value, updated_at, updated_by). API: GET /settings (all for org), PUT /settings/{id} (update toggle or value). Per-org isolation.",
+          "requirements_covered": [
+            "FR-20",
+            "FR-21",
+            "FR-15"
+          ],
+          "nfrs_applicable": [
+            "NFR-04"
+          ],
+          "user_facing": false,
+          "data_sensitivity": "Internal",
+          "change_type": "new"
+        },
+        {
+          "feature_id": "F-02.4",
+          "title": "Organization Name & Driver Identity Settings",
+          "description": "Organization Name: toggle always ON/disabled, input disabled/pre-populated from user org. Driver Name: toggle ON/disabled. Driver ID: toggle ON/active. Driver Phone: toggle ON/disabled. Truck Number: toggle ON/disabled. Carrier Approval: toggle ON/active.",
+          "requirements_covered": [
+            "FR-03",
+            "FR-05",
+            "FR-06"
+          ],
+          "nfrs_applicable": [],
+          "user_facing": true,
+          "data_sensitivity": "Internal",
+          "change_type": "new"
+        },
+        {
+          "feature_id": "F-02.5",
+          "title": "Help Text Component",
+          "description": "Reusable help text component displayed below configurable settings. Muted italic style. Linked to input via aria-describedby for screen readers.",
+          "requirements_covered": [
+            "FR-23"
+          ],
+          "nfrs_applicable": [
+            "NFR-03"
+          ],
+          "user_facing": true,
+          "data_sensitivity": "Public",
+          "change_type": "new"
+        }
+      ]
+    },
+    {
+      "epic_id": "EP-03",
+      "title": "Advanced Settings \u2014 Temperature, Early Check In & Confirmation",
+      "description": "Implement the three complex settings with conditional inputs: Temperature Acknowledgement (alphanumeric input with validation), Early Check In (hours + instruction with defaults and placeholders), and Confirmation Step (customizable success message). At sprint end: all 10 settings fully functional with validation, help text, and auto-save.",
+      "sprint": 3,
+      "requirements_covered": [
+        "FR-07",
+        "FR-08",
+        "FR-09"
+      ],
+      "scope_in": [
+        "Temperature Acknowledgement setting with conditional input, alphanumeric validation, 'Invalid format' error",
+        "Early Check In setting with hours (numeric) and instruction (free text) inputs, default values, {TRAFFIC_CLERK_PHONE} placeholder",
+        "Confirmation Step setting with customizable success text and default value",
+        "All three settings: conditional enable/disable based on toggle, help text, auto-save, validation"
+      ],
+      "scope_out": [
+        "QR code generation",
+        "Mobile app API"
+      ],
+      "definition_of_done": "All 10 settings visible and functional. Temperature: toggle ON enables input, validation on focus out. Early Check In: toggle ON enables hours + instruction, defaults populated. Confirmation: toggle OFF disables input. All auto-save and validate correctly.",
+      "reasoning": "These three settings have the most complex behavior (conditional inputs, multiple validation rules, default values, help text). Building them after the framework (Sprint 2) means the toggle/save/validate infrastructure is already proven. Deployable as v0.3 with complete admin page.",
+      "features": [
+        {
+          "feature_id": "F-03.1",
+          "title": "Temperature Acknowledgement Setting",
+          "description": "Toggle OFF by default, active. When ON: enable Temperature Range Requirements input (alphanumeric). Validation on focus out: 'Invalid format' for bad input, 'A value is required' if empty. Auto-save. Help text: 'Add the Temperature requirements to display during Check In via mobile app...'",
+          "requirements_covered": [
+            "FR-07"
+          ],
+          "nfrs_applicable": [
+            "NFR-02"
+          ],
+          "user_facing": true,
+          "data_sensitivity": "Internal",
+          "change_type": "new"
+        },
+        {
+          "feature_id": "F-03.2",
+          "title": "Early Check In Setting with Hours & Instruction",
+          "description": "Toggle OFF by default, active. When ON: enable (1) Allowed Early Hours input \u2014 numbers only, required, validation 'Numbers only'. (2) Early Instruction textarea \u2014 free text, required, default: 'Due to earlier arrival time...{TRAFFIC_CLERK_PHONE}'. Both auto-save on focus out. Help texts for both fields.",
+          "requirements_covered": [
+            "FR-08"
+          ],
+          "nfrs_applicable": [
+            "NFR-02"
+          ],
+          "user_facing": true,
+          "data_sensitivity": "Internal",
+          "change_type": "new"
+        },
+        {
+          "feature_id": "F-03.3",
+          "title": "Confirmation Step Setting",
+          "description": "Toggle ON by default, active. When ON: Confirmation Text input enabled with default: 'Driver Check In is successfully completed!...'. When OFF: input disabled. Validation: required when ON. Auto-save. Help text.",
+          "requirements_covered": [
+            "FR-09"
+          ],
+          "nfrs_applicable": [
+            "NFR-02"
+          ],
+          "user_facing": true,
+          "data_sensitivity": "Internal",
+          "change_type": "new"
+        }
+      ]
+    },
+    {
+      "epic_id": "EP-04",
+      "title": "QR Code Generation, PDF & Print",
+      "description": "Implement the QR Code generation flow: Generate button, modal with dynamic title, QR code image, Save as PDF download, Print dialog, and Close. Backend QR generation service. At sprint end: admin can generate, download, and print QR codes for facility driver check-in access.",
+      "sprint": 3,
+      "requirements_covered": [
+        "FR-04",
+        "FR-12",
+        "FR-13",
+        "FR-14",
+        "FR-26"
+      ],
+      "scope_in": [
+        "QR Code Check In Access toggle setting",
+        "Generate QR Code button (always active)",
+        "QR modal: title 'QR Code for {ORG_NAME} Driver Check In Access'",
+        "QR code image generation (backend service)",
+        "Save as PDF button (auto-download)",
+        "Print button (system print dialog)",
+        "Close button (dismiss modal)"
+      ],
+      "scope_out": [
+        "Mobile app check-in flow",
+        "QR code scanning implementation"
+      ],
+      "definition_of_done": "Admin clicks Generate QR Code, modal shows with org-specific title and QR image. Save as PDF downloads file. Print opens system dialog. Close dismisses modal. QR regenerated on each click.",
+      "reasoning": "QR code is a self-contained feature with its own backend service (generation), frontend (modal), and output (PDF/print). Placed in Sprint 3 alongside advanced settings to deliver a complete admin page. Deployable as v0.3.",
+      "features": [
+        {
+          "feature_id": "F-04.1",
+          "title": "QR Code Generation Modal",
+          "description": "Modal popup triggered by 'Generate QR Code' button. Title: 'QR Code for {ORG_NAME} Driver Check In Access'. Displays newly generated QR code image. Three action buttons: Save as PDF, Print, Close. Modal has focus trap, Escape to close.",
+          "requirements_covered": [
+            "FR-04",
+            "FR-12"
+          ],
+          "nfrs_applicable": [
+            "NFR-03"
+          ],
+          "user_facing": true,
+          "data_sensitivity": "Internal",
+          "change_type": "new"
+        },
+        {
+          "feature_id": "F-04.2",
+          "title": "QR Code Backend Generation Service",
+          "description": "Backend endpoint: POST /api/v1/driver-checkin/qr-code?org_id={id}. Generates QR code image encoding the mobile check-in URL for the organization. Returns PNG image. New QR generated per request.",
+          "requirements_covered": [
+            "FR-26"
+          ],
+          "nfrs_applicable": [],
+          "user_facing": false,
+          "data_sensitivity": "Internal",
+          "change_type": "new"
+        },
+        {
+          "feature_id": "F-04.3",
+          "title": "QR Code PDF Download & Print",
+          "description": "Save as PDF: generate PDF containing QR code image + org name header, auto-download to user's computer. Print: trigger window.print() with print-optimized layout. Close: dismiss modal without action.",
+          "requirements_covered": [
+            "FR-13",
+            "FR-14"
+          ],
+          "nfrs_applicable": [],
+          "user_facing": true,
+          "data_sensitivity": "Internal",
+          "change_type": "new"
+        }
+      ]
+    },
+    {
+      "epic_id": "EP-05",
+      "title": "Mobile App API & Hardening",
+      "description": "Build the mobile app read-only API for settings, implement toggle-to-mobile sync, and harden the application with security audit, accessibility audit, and error handling. At sprint end: mobile app can read enabled settings per org, complete security and accessibility compliance.",
+      "sprint": 4,
+      "requirements_covered": [
+        "FR-16",
+        "FR-22"
+      ],
+      "scope_in": [
+        "Mobile app read-only API endpoint (GET /settings/mobile)",
+        "Toggle state sync \u2014 OFF on admin disables in mobile",
+        "Security audit (SAST, dependency scan)",
+        "Accessibility audit (WCAG 2.1 AA)",
+        "Error handling for API failures (save failures, network errors)",
+        "Concurrent editing protection (optimistic locking)",
+        "Audit logging for setting changes"
+      ],
+      "scope_out": [
+        "Mobile app UI implementation",
+        "QR code scanning in mobile app"
+      ],
+      "definition_of_done": "Mobile API returns only enabled settings for org. Toggle OFF on admin \u2192 setting absent from mobile API response. Zero critical/high security findings. WCAG 2.1 AA audit passed. Audit log captures all setting changes.",
+      "reasoning": "Mobile API is the final integration piece \u2014 admin page must be complete first (Sprints 2-3). Hardening in final sprint ensures production readiness. Deployable as v1.0 GA.",
+      "features": [
+        {
+          "feature_id": "F-05.1",
+          "title": "Mobile App Settings API",
+          "description": "Read-only endpoint: GET /api/v1/driver-checkin/settings/mobile?org_id={id}. Returns only settings where toggle is ON, with configured values. Different auth from admin API (mobile app token). Cached with short TTL.",
+          "requirements_covered": [
+            "FR-22",
+            "FR-16"
+          ],
+          "nfrs_applicable": [
+            "NFR-04"
+          ],
+          "user_facing": false,
+          "data_sensitivity": "Internal",
+          "change_type": "new"
+        },
+        {
+          "feature_id": "F-05.2",
+          "title": "Security & Accessibility Audit",
+          "description": "SAST scan (zero critical/high), dependency vulnerability scan, WCAG 2.1 AA audit on all pages (keyboard nav, screen reader, focus management, color contrast). Fix all findings.",
+          "requirements_covered": [],
+          "nfrs_applicable": [
+            "NFR-03",
+            "NFR-04"
+          ],
+          "user_facing": false,
+          "data_sensitivity": "Internal",
+          "change_type": "new"
+        },
+        {
+          "feature_id": "F-05.3",
+          "title": "Error Handling, Audit Logging & Resilience",
+          "description": "API failure handling: save failure shows error toast with retry. Network offline: queue saves, sync on reconnect. Audit logging: all setting changes logged (who, what, when, old/new value). Optimistic locking for concurrent edits.",
+          "requirements_covered": [],
+          "nfrs_applicable": [
+            "NFR-01"
+          ],
+          "user_facing": true,
+          "data_sensitivity": "Internal",
+          "change_type": "new"
+        }
+      ]
+    }
+  ],
+  "nfr_mapping": [
+    {
+      "nfr_id": "NFR-01",
+      "title": "Auto-Save Responsiveness (2s)",
+      "applicable_epics": [
+        "EP-02",
+        "EP-03",
+        "EP-05"
+      ]
+    },
+    {
+      "nfr_id": "NFR-02",
+      "title": "Validation Feedback Timing (200ms)",
+      "applicable_epics": [
+        "EP-02",
+        "EP-03"
+      ]
+    },
+    {
+      "nfr_id": "NFR-03",
+      "title": "WCAG 2.1 AA Compliance",
+      "applicable_epics": [
+        "EP-01",
+        "EP-02",
+        "EP-04",
+        "EP-05"
+      ]
+    },
+    {
+      "nfr_id": "NFR-04",
+      "title": "Admin Role Authorization",
+      "applicable_epics": [
+        "EP-01",
+        "EP-02",
+        "EP-05"
+      ]
+    }
+  ],
+  "traceability_matrix": [
+    {
+      "fr_id": "FR-01",
+      "feature_id": "F-01.4",
+      "epic_id": "EP-01",
+      "sprint": 1
+    },
+    {
+      "fr_id": "FR-02",
+      "feature_id": "F-02.1",
+      "epic_id": "EP-02",
+      "sprint": 2
+    },
+    {
+      "fr_id": "FR-03",
+      "feature_id": "F-02.4",
+      "epic_id": "EP-02",
+      "sprint": 2
+    },
+    {
+      "fr_id": "FR-04",
+      "feature_id": "F-04.1",
+      "epic_id": "EP-04",
+      "sprint": 3
+    },
+    {
+      "fr_id": "FR-05",
+      "feature_id": "F-02.4",
+      "epic_id": "EP-02",
+      "sprint": 2
+    },
+    {
+      "fr_id": "FR-06",
+      "feature_id": "F-02.4",
+      "epic_id": "EP-02",
+      "sprint": 2
+    },
+    {
+      "fr_id": "FR-07",
+      "feature_id": "F-03.1",
+      "epic_id": "EP-03",
+      "sprint": 3
+    },
+    {
+      "fr_id": "FR-08",
+      "feature_id": "F-03.2",
+      "epic_id": "EP-03",
+      "sprint": 3
+    },
+    {
+      "fr_id": "FR-09",
+      "feature_id": "F-03.3",
+      "epic_id": "EP-03",
+      "sprint": 3
+    },
+    {
+      "fr_id": "FR-10",
+      "feature_id": "F-02.2",
+      "epic_id": "EP-02",
+      "sprint": 2
+    },
+    {
+      "fr_id": "FR-11",
+      "feature_id": "F-02.2",
+      "epic_id": "EP-02",
+      "sprint": 2
+    },
+    {
+      "fr_id": "FR-12",
+      "feature_id": "F-04.1",
+      "epic_id": "EP-04",
+      "sprint": 3
+    },
+    {
+      "fr_id": "FR-13",
+      "feature_id": "F-04.3",
+      "epic_id": "EP-04",
+      "sprint": 3
+    },
+    {
+      "fr_id": "FR-14",
+      "feature_id": "F-04.3",
+      "epic_id": "EP-04",
+      "sprint": 3
+    },
+    {
+      "fr_id": "FR-15",
+      "feature_id": "F-02.3",
+      "epic_id": "EP-02",
+      "sprint": 2
+    },
+    {
+      "fr_id": "FR-16",
+      "feature_id": "F-05.1",
+      "epic_id": "EP-05",
+      "sprint": 4
+    },
+    {
+      "fr_id": "FR-17",
+      "feature_id": "F-01.1",
+      "epic_id": "EP-01",
+      "sprint": 1
+    },
+    {
+      "fr_id": "FR-18",
+      "feature_id": "F-01.2",
+      "epic_id": "EP-01",
+      "sprint": 1
+    },
+    {
+      "fr_id": "FR-19",
+      "feature_id": "F-01.3",
+      "epic_id": "EP-01",
+      "sprint": 1
+    },
+    {
+      "fr_id": "FR-20",
+      "feature_id": "F-02.3",
+      "epic_id": "EP-02",
+      "sprint": 2
+    },
+    {
+      "fr_id": "FR-21",
+      "feature_id": "F-02.3",
+      "epic_id": "EP-02",
+      "sprint": 2
+    },
+    {
+      "fr_id": "FR-22",
+      "feature_id": "F-05.1",
+      "epic_id": "EP-05",
+      "sprint": 4
+    },
+    {
+      "fr_id": "FR-23",
+      "feature_id": "F-02.5",
+      "epic_id": "EP-02",
+      "sprint": 2
+    },
+    {
+      "fr_id": "FR-24",
+      "feature_id": "F-02.2",
+      "epic_id": "EP-02",
+      "sprint": 2
+    },
+    {
+      "fr_id": "FR-25",
+      "feature_id": "F-02.1",
+      "epic_id": "EP-02",
+      "sprint": 2
+    },
+    {
+      "fr_id": "FR-26",
+      "feature_id": "F-04.2",
+      "epic_id": "EP-04",
+      "sprint": 3
+    }
+  ],
+  "uncovered_requirements": [],
+  "delivery_summary": "The Driver Check In Admin Module is decomposed into 5 epics across 4 sprints. Sprint 1 (EP-01) builds the foundation: auth, roles, org model, and HIVE navigation with tab system \u2014 deployable as v0.1. Sprint 2 (EP-02) delivers the settings framework with auto-save, validation, and the 6 core settings (Org, Driver Name/ID/Phone/Truck, Carrier Approval) \u2014 deployable as v0.2 with a functional admin page. Sprint 3 (EP-03 + EP-04) completes the admin page: 3 advanced settings (Temperature, Early Check In, Confirmation) plus QR code generation with PDF/Print \u2014 deployable as v0.3 with all 10 settings and QR capability. Sprint 4 (EP-05) adds the mobile API, security/accessibility audit, and production hardening \u2014 deployable as v1.0 GA. All 26 FRs covered across 18 features."
+}

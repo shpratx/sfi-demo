@@ -1,0 +1,358 @@
+{
+"stories": [
+
+        { 
+          "story_id": "US-001",
+          "feature_id": "F-01.1",
+          "title": "User Login with Email/Password and JWT Token Issuance",
+          "user_story": "As an Admin HIVE User, I want to log in with my email and password so that I receive a JWT token and can securely access the Driver Check In Admin Module.",
+          "acceptance_criteria": [
+            "Given a registered user, When they submit valid email and password on the login form, Then the system authenticates credentials against bcrypt-hashed passwords and returns a signed JWT token stored in an HttpOnly secure cookie.",
+            "Given a user on the login page, When they submit an invalid email or wrong password, Then the system displays a generic 'Invalid credentials' error without revealing which field is incorrect and returns HTTP 401.",
+            "Given the login form is rendered, When a screen reader navigates the page, Then all form inputs have associated <label> elements and the submit button has an accessible name.",
+            "Given a login request, When the server issues a JWT, Then the token contains user_id, organization_id, and role claims with an expiry of no more than 8 hours.",
+            "Given a brute-force attempt, When 5 consecutive failed logins occur for the same email within 15 minutes, Then the account is temporarily locked for 15 minutes and the user is informed."
+          ],
+          "story_points": 3,
+          "data_sensitivity": "Restricted",
+          "depends_on": [],
+          "change_type": "new",
+          "citation": "FR-17",
+          "reasoning": "Foundation story — all subsequent features require authenticated sessions. Bcrypt and HttpOnly cookie requirements enforce secure credential storage and token transport."
+        },
+        {
+          "story_id": "US-002",
+          "feature_id": "F-01.1",
+          "title": "Session Management, Logout, and Expired Session Redirect",
+          "user_story": "As an Admin HIVE User, I want my session to be managed securely so that I can log out explicitly and be redirected to login when my session expires.",
+          "acceptance_criteria": [
+            "Given an authenticated user, When they click the Logout button, Then the HttpOnly session cookie is cleared server-side and the user is redirected to the login page.",
+            "Given an authenticated user with an expired JWT, When they make any API request, Then the server returns HTTP 401 and the UI redirects to the login page with a 'Session expired' message.",
+            "Given the logout button is rendered, When a keyboard user navigates to it, Then it is focusable via Tab and activatable via Enter or Space with role='button' or as a <button> element.",
+            "Given a user is redirected after session expiry, When they log in again, Then no stale tokens or session data remain in browser storage."
+          ],
+          "story_points": 2,
+          "data_sensitivity": "Restricted",
+          "depends_on": ["US-001"],
+          "change_type": "new",
+          "citation": "FR-17",
+          "reasoning": "Completes the auth lifecycle. Expired-session redirect prevents users from operating on stale tokens, and explicit logout clears sensitive session material."
+        },
+        {
+          "story_id": "US-003",
+          "feature_id": "F-01.2",
+          "title": "Admin Role Gates Administration Menu Visibility",
+          "user_story": "As an Admin HIVE User, I want the Administration menu to be visible only when I have the Admin role so that privileged functionality is hidden from unauthorized users.",
+          "acceptance_criteria": [
+            "Given an authenticated user with the Admin role, When the main navigation renders, Then the 'Administration' menu item is visible and functional.",
+            "Given an authenticated user without the Admin role, When the main navigation renders, Then the 'Administration' menu item is not present in the DOM.",
+            "Given the role check, When the server provides the user's role claim in the JWT, Then the UI reads the role from the token claims and the server independently validates role on every admin API call.",
+            "Given the Administration menu is visible, When a screen reader user navigates the nav bar, Then the menu item has an accessible label 'Administration' within a <nav> landmark.",
+            "Given a user's role is changed from Admin to Standard while logged in, When they next make an API request, Then the server rejects admin requests with 403 and the UI hides the menu on next navigation render."
+          ],
+          "story_points": 3,
+          "data_sensitivity": "Restricted",
+          "depends_on": ["US-001"],
+          "change_type": "new",
+          "citation": "FR-18",
+          "reasoning": "Role-based visibility is the first layer of access control. Server-side enforcement prevents client-side bypass, satisfying the Restricted classification."
+        },
+        {
+          "story_id": "US-004",
+          "feature_id": "F-01.2",
+          "title": "Non-Admin Users Receive 403 on Admin Pages and APIs",
+          "user_story": "As a Standard HIVE User, I want to be blocked from accessing admin pages and APIs so that I cannot view or modify privileged settings.",
+          "acceptance_criteria": [
+            "Given an authenticated Standard HIVE User, When they attempt to navigate to any /admin/* route via URL, Then the UI displays a 403 Forbidden page with a 'Return to Home' link.",
+            "Given an authenticated Standard HIVE User, When they send a direct API request to any admin endpoint, Then the server returns HTTP 403 with a JSON error body {\"error\": \"Forbidden\"}.",
+            "Given the 403 page is displayed, When a screen reader reads the page, Then the page has a heading level 1 with text 'Access Denied' and the return link is keyboard-focusable.",
+            "Given a tampered JWT with an elevated role claim, When the server receives the request, Then it validates the role against the database and rejects the request with 403 if mismatched."
+          ],
+          "story_points": 2,
+          "data_sensitivity": "Restricted",
+          "depends_on": ["US-003"],
+          "change_type": "new",
+          "citation": "FR-18",
+          "reasoning": "Negative-path complement to US-003. Ensures server-side enforcement so that client-side role hiding cannot be bypassed by direct URL or API access."
+        },
+        {
+          "story_id": "US-005",
+          "feature_id": "F-01.3",
+          "title": "Organization CRUD — Name, Address, Phone",
+          "user_story": "As an Admin HIVE User, I want to create, read, update, and delete organizations with name, address, and phone so that the system can manage multi-tenant data.",
+          "acceptance_criteria": [
+            "Given an Admin user on the Organizations page, When they fill in name (required), address, and phone and submit, Then a new organization record is created and appears in the list.",
+            "Given an existing organization, When the Admin edits any field and saves, Then the record is updated and the list reflects the change immediately.",
+            "Given an existing organization, When the Admin deletes it, Then the system prompts for confirmation and, upon confirm, soft-deletes the record so it no longer appears in active lists.",
+            "Given the organization form, When the Admin submits with a blank name, Then an inline validation error 'Organization name is required' is displayed and the form is not submitted.",
+            "Given the organization form fields, When a screen reader user navigates the form, Then each input has a programmatically associated label and required fields are indicated with aria-required='true'."
+          ],
+          "story_points": 3,
+          "data_sensitivity": "Internal",
+          "depends_on": ["US-001"],
+          "change_type": "new",
+          "citation": "FR-19",
+          "reasoning": "Organizations are the tenancy boundary for all settings. CRUD operations must exist before users or settings can be scoped to an organization."
+        },
+        {
+          "story_id": "US-006",
+          "feature_id": "F-01.3",
+          "title": "User-to-Organization Assignment",
+          "user_story": "As an Admin HIVE User, I want to assign users to an organization so that their settings and data are scoped to the correct tenant.",
+          "acceptance_criteria": [
+            "Given an Admin user on the user management page, When they select a user and assign them to an organization from a dropdown, Then the user's organization_id is updated and reflected in their profile.",
+            "Given a user already assigned to an organization, When the Admin reassigns them, Then the previous assignment is replaced and the user's scoped data references the new organization.",
+            "Given the assignment dropdown, When the Admin attempts to assign a user to a non-existent organization via API, Then the server returns HTTP 422 with error 'Invalid organization'.",
+            "Given the assignment interface, When a keyboard user interacts with the organization dropdown, Then it is operable via arrow keys and selection is announced by screen readers."
+          ],
+          "story_points": 2,
+          "data_sensitivity": "Internal",
+          "depends_on": ["US-005"],
+          "change_type": "new",
+          "citation": "FR-19",
+          "reasoning": "Links users to organizations, enabling org-scoped settings in Sprint 2. The negative path covers invalid assignment attempts."
+        },
+        {
+          "story_id": "US-007",
+          "feature_id": "F-01.4",
+          "title": "Administration Menu with 'Driver Check In Set Up' Dropdown",
+          "user_story": "As an Admin HIVE User, I want an Administration menu in the main navigation with a 'Driver Check In Set Up' dropdown item so that I can access the module configuration area.",
+          "acceptance_criteria": [
+            "Given an authenticated Admin user, When they click the 'Administration' menu, Then a dropdown appears containing 'Driver Check In Set Up' as a selectable item.",
+            "Given the dropdown is open, When the user clicks 'Driver Check In Set Up', Then the Driver Check In Admin page opens (or a new tab is created per US-008).",
+            "Given the dropdown menu, When a keyboard user presses Enter or Space on 'Administration', Then the dropdown opens; arrow keys navigate items; Escape closes the dropdown.",
+            "Given the dropdown is rendered, When a screen reader reads it, Then the menu has role='menu', items have role='menuitem', and the trigger button has aria-haspopup='true' and aria-expanded reflecting state.",
+            "Given an Admin user clicks 'Driver Check In Set Up' when the server is unreachable, Then a toast notification displays 'Unable to load page. Please try again.' and the dropdown closes."
+          ],
+          "story_points": 2,
+          "data_sensitivity": "Public",
+          "depends_on": ["US-003"],
+          "change_type": "new",
+          "citation": "FR-01",
+          "reasoning": "Primary entry point into the module. Accessibility ACs ensure WCAG 2.1 AA compliance for menu patterns. Error path covers network failure."
+        },
+        {
+          "story_id": "US-008",
+          "feature_id": "F-01.4",
+          "title": "In-App Tab System — Opens 'Driver Check In Admin' Tab",
+          "user_story": "As an Admin HIVE User, I want the Driver Check In Set Up action to open a new in-app tab titled 'Driver Check In Admin' so that I can work on configuration alongside other HIVE modules.",
+          "acceptance_criteria": [
+            "Given the user clicks 'Driver Check In Set Up', When the action completes, Then a new in-app tab is created with the title 'Driver Check In Admin' and focus moves to the new tab panel.",
+            "Given the 'Driver Check In Admin' tab is already open, When the user clicks 'Driver Check In Set Up' again, Then the existing tab is focused instead of creating a duplicate.",
+            "Given multiple tabs are open, When the user closes the 'Driver Check In Admin' tab via its close button, Then the tab is removed and focus returns to the previously active tab.",
+            "Given the tab bar, When a screen reader user navigates, Then the tab list has role='tablist', each tab has role='tab' with aria-selected, and the panel has role='tabpanel' with aria-labelledby referencing its tab.",
+            "Given the tab system, When a keyboard user navigates, Then left/right arrow keys move between tabs and Tab key moves focus into the active panel content."
+          ],
+          "story_points": 3,
+          "data_sensitivity": "Public",
+          "depends_on": ["US-007"],
+          "change_type": "new",
+          "citation": "FR-01",
+          "reasoning": "Tab-based navigation is the module's container pattern. Duplicate-prevention and keyboard/screen-reader ACs ensure usability and WCAG compliance."
+        },
+        {
+          "story_id": "US-009",
+          "feature_id": "F-02.1",
+          "title": "Settings Page with Toggle List Layout and Loading Skeleton",
+          "user_story": "As an Admin HIVE User, I want the Driver Check In settings page to display a list of toggle settings with a loading skeleton so that I see immediate visual feedback while data loads.",
+          "acceptance_criteria": [
+            "Given the Admin navigates to the Driver Check In Admin tab, When the settings API is loading, Then a skeleton placeholder matching the toggle list layout is displayed.",
+            "Given the API returns settings data, When the skeleton is replaced, Then each setting is rendered as a row with a label and a toggle switch in a vertical list.",
+            "Given the settings page is rendered, When a screen reader user navigates, Then each toggle has an accessible name matching its label and the list is contained in a region with aria-label='Driver Check In Settings'.",
+            "Given the settings API returns an error, When the page attempts to render, Then a user-friendly error message 'Unable to load settings. Please try again.' is displayed with a Retry button.",
+            "Given the skeleton is displayed, When the user has prefers-reduced-motion enabled, Then skeleton animations are disabled."
+          ],
+          "story_points": 3,
+          "data_sensitivity": "Internal",
+          "depends_on": ["US-008", "US-014"],
+          "change_type": "new",
+          "citation": "FR-02, FR-25",
+          "reasoning": "Establishes the settings page shell. Skeleton loading improves perceived performance. Error and a11y ACs ensure robustness and WCAG compliance."
+        },
+        {
+          "story_id": "US-010",
+          "feature_id": "F-02.1",
+          "title": "Toggle ON/OFF Controls Setting State on Page and Mobile App",
+          "user_story": "As an Admin HIVE User, I want to toggle settings ON or OFF so that the change is reflected both on the admin page and in the driver-facing mobile app.",
+          "acceptance_criteria": [
+            "Given a setting toggle is OFF, When the Admin clicks it, Then the toggle visually switches to ON and the setting value is persisted via the API.",
+            "Given a setting is toggled ON in the admin page, When a driver opens the mobile app, Then the corresponding field or step is enabled in the check-in flow.",
+            "Given a toggle switch, When a keyboard user focuses it and presses Space, Then the toggle state changes and the new state is announced by screen readers via aria-checked.",
+            "Given the API call to persist the toggle fails, Then the toggle reverts to its previous state and an inline error 'Failed to save. Please try again.' is displayed."
+          ],
+          "story_points": 2,
+          "data_sensitivity": "Internal",
+          "depends_on": ["US-009", "US-014"],
+          "change_type": "new",
+          "citation": "FR-02, FR-25",
+          "reasoning": "Core interaction pattern for the settings page. Optimistic-revert on failure ensures data integrity. Mobile app impact validates end-to-end flow."
+        },
+        {
+          "story_id": "US-011",
+          "feature_id": "F-02.2",
+          "title": "Auto-Save Field Values on Focus Out via API",
+          "user_story": "As an Admin HIVE User, I want field values to auto-save when I move focus away from an input so that I don't need to manually click a save button.",
+          "acceptance_criteria": [
+            "Given the Admin has edited a text input field, When the field loses focus (blur event), Then the new value is sent to the settings API via a PATCH request.",
+            "Given the auto-save API call succeeds, When the response returns, Then no page reload occurs and the field retains the saved value.",
+            "Given the auto-save API call fails, When the response returns an error, Then the field is highlighted with a red border and an inline message 'Save failed — please try again' appears.",
+            "Given the Admin edits a field and immediately moves focus to another field, When both blur events fire in quick succession, Then requests are debounced (300ms) and sent sequentially to avoid race conditions.",
+            "Given a screen reader user triggers auto-save, When the save completes or fails, Then an aria-live='polite' region announces 'Saved' or the error message."
+          ],
+          "story_points": 3,
+          "data_sensitivity": "Internal",
+          "depends_on": ["US-014"],
+          "change_type": "new",
+          "citation": "FR-10, FR-11, FR-24",
+          "reasoning": "Auto-save eliminates manual save friction. Debounce prevents race conditions. Aria-live announcements keep screen reader users informed of save status."
+        },
+        {
+          "story_id": "US-012",
+          "feature_id": "F-02.2",
+          "title": "Validation on Focus Out with Inline Error Messages",
+          "user_story": "As an Admin HIVE User, I want field values to be validated when I move focus away so that I see immediate inline errors before data is saved.",
+          "acceptance_criteria": [
+            "Given a required field is left blank, When the field loses focus, Then an inline error message 'This field is required' appears below the field and the auto-save is not triggered.",
+            "Given a phone number field with non-numeric characters, When the field loses focus, Then an inline error 'Enter a valid phone number' appears and the value is not saved.",
+            "Given a field with a validation error displayed, When the user corrects the value and moves focus away, Then the error message is removed and auto-save proceeds.",
+            "Given an inline error is displayed, When a screen reader user focuses the field, Then the error message is associated via aria-describedby and announced.",
+            "Given server-side validation rejects a value, When the API returns a 422 with a message, Then the server's error message is displayed inline below the field."
+          ],
+          "story_points": 3,
+          "data_sensitivity": "Internal",
+          "depends_on": ["US-011"],
+          "change_type": "new",
+          "citation": "FR-10, FR-11, FR-24",
+          "reasoning": "Client-side validation prevents invalid saves; server-side validation is the safety net. aria-describedby ensures error messages are perceivable by assistive technology."
+        },
+        {
+          "story_id": "US-013",
+          "feature_id": "F-02.2",
+          "title": "Save Confirmation Indicator (Brief Checkmark)",
+          "user_story": "As an Admin HIVE User, I want to see a brief checkmark indicator after a successful save so that I have confidence my changes were persisted.",
+          "acceptance_criteria": [
+            "Given a field value is auto-saved successfully, When the API returns 200, Then a green checkmark icon appears adjacent to the field for 2 seconds and then fades out.",
+            "Given the checkmark is displayed, When a screen reader is active, Then an aria-live='polite' region announces 'Setting saved successfully'.",
+            "Given the user has prefers-reduced-motion enabled, When the checkmark appears, Then it is shown and hidden without fade animation.",
+            "Given multiple fields are saved in quick succession, When each save completes, Then each field shows its own independent checkmark indicator without interfering with others."
+          ],
+          "story_points": 1,
+          "data_sensitivity": "Internal",
+          "depends_on": ["US-011"],
+          "change_type": "new",
+          "citation": "FR-10, FR-11, FR-24",
+          "reasoning": "Visual confirmation closes the feedback loop for auto-save. Brief display avoids clutter. Reduced-motion support respects user preferences."
+        },
+        {
+          "story_id": "US-014",
+          "feature_id": "F-02.3",
+          "title": "Settings Database Schema and Admin API Endpoints",
+          "user_story": "As an Admin HIVE User, I want a settings database schema and RESTful API endpoints so that settings can be stored, retrieved, and updated per organization.",
+          "acceptance_criteria": [
+            "Given the database migration runs, When the schema is applied, Then a 'settings' table exists with columns: id, organization_id (FK), setting_key, setting_value, updated_by, updated_at.",
+            "Given an authenticated Admin user, When they call GET /api/admin/settings?org_id={id}, Then the API returns all settings for that organization as a JSON array.",
+            "Given an authenticated Admin user, When they call PATCH /api/admin/settings/{setting_id} with a valid body, Then the setting is updated and the response includes the updated record with a 200 status.",
+            "Given an unauthenticated or non-admin request, When any admin settings endpoint is called, Then the API returns 401 or 403 respectively.",
+            "Given a PATCH request with an invalid setting_key or malformed body, When the server processes it, Then it returns HTTP 422 with a descriptive validation error."
+          ],
+          "story_points": 5,
+          "data_sensitivity": "Internal",
+          "depends_on": ["US-005", "US-001"],
+          "change_type": "new",
+          "citation": "FR-20, FR-21, FR-15",
+          "reasoning": "Foundational data layer for all settings features. Organization-scoped schema enforces multi-tenancy. Auth checks on endpoints prevent unauthorized access."
+        },
+        {
+          "story_id": "US-015",
+          "feature_id": "F-02.3",
+          "title": "Settings Persistence per Organization Across Page Reloads",
+          "user_story": "As an Admin HIVE User, I want my saved settings to persist across page reloads so that I see the current configuration every time I open the settings page.",
+          "acceptance_criteria": [
+            "Given an Admin has saved settings for their organization, When they reload the Driver Check In Admin page, Then all toggle states and field values reflect the last saved state from the database.",
+            "Given two Admin users in different organizations, When each loads the settings page, Then each sees only their own organization's settings.",
+            "Given the settings API is called on page load, When the response is received, Then the UI populates all fields before removing the loading skeleton.",
+            "Given an Admin loads settings and the API returns an empty set (new organization), When the page renders, Then all toggles default to OFF and text fields are empty, with an aria-live='polite' region announcing 'No settings configured yet'."
+          ],
+          "story_points": 2,
+          "data_sensitivity": "Internal",
+          "depends_on": ["US-014", "US-009"],
+          "change_type": "new",
+          "citation": "FR-20, FR-21, FR-15",
+          "reasoning": "Validates that the data layer and UI are correctly integrated. Cross-org isolation test ensures multi-tenancy. Default-state AC covers the new-organization edge case."
+        },
+        {
+          "story_id": "US-016",
+          "feature_id": "F-02.4",
+          "title": "Organization Name Setting — Locked Toggle, Pre-Populated Input",
+          "user_story": "As an Admin HIVE User, I want the Organization Name setting to have a permanently ON toggle and a pre-populated read-only input so that the organization name is always displayed in the check-in flow.",
+          "acceptance_criteria": [
+            "Given the settings page loads, When the Organization Name row renders, Then the toggle is ON and disabled (not clickable), and the input field is pre-populated with the organization's name from the database.",
+            "Given the Organization Name input, When the Admin views it, Then the field is read-only and visually styled to indicate it is not editable.",
+            "Given a screen reader user navigates to the Organization Name toggle, When it receives focus, Then it announces 'Organization Name, toggle, on, disabled' via aria-disabled='true' and aria-checked='true'.",
+            "Given the organization name in the database is blank or missing, When the settings page loads, Then the input displays 'Not configured' in placeholder text and an inline warning 'Organization name not set — update in Organization settings' is shown."
+          ],
+          "story_points": 2,
+          "data_sensitivity": "Internal",
+          "depends_on": ["US-009", "US-005"],
+          "change_type": "new",
+          "citation": "FR-03",
+          "reasoning": "Organization Name is always required in the check-in flow, so the toggle is locked ON. Pre-population from the org record avoids duplicate data entry. Error path covers missing org name."
+        },
+        {
+          "story_id": "US-017",
+          "feature_id": "F-02.4",
+          "title": "Driver Identity Settings — Name, ID, Phone, Truck Number Toggles",
+          "user_story": "As an Admin HIVE User, I want to toggle Driver Name, Driver ID, Phone Number, and Truck Number settings ON or OFF so that I can control which identity fields appear in the mobile check-in flow.",
+          "acceptance_criteria": [
+            "Given the settings page loads, When the driver identity section renders, Then four toggle rows are displayed: 'Driver Name', 'Driver ID', 'Phone Number', 'Truck Number', each independently controllable.",
+            "Given the Admin toggles 'Driver Name' to ON, When the change is saved, Then the Driver Name field appears in the mobile app check-in flow for that organization.",
+            "Given all four identity toggles are OFF, When the Admin views the page, Then an inline warning 'At least one driver identity field is recommended' is displayed but saving is not blocked.",
+            "Given the identity toggles section, When a screen reader user navigates, Then each toggle has an accessible name matching its label and the section has a group label 'Driver Identity Settings' via role='group' and aria-label.",
+            "Given the Admin toggles a setting and the API fails, When the error response is received, Then the toggle reverts and an inline error message is displayed."
+          ],
+          "story_points": 3,
+          "data_sensitivity": "Internal",
+          "depends_on": ["US-010", "US-014"],
+          "change_type": "new",
+          "citation": "FR-05, FR-06",
+          "reasoning": "Core configurable identity fields for the check-in flow. Warning on all-off state guides admins without blocking flexibility. Grouped a11y ensures screen reader comprehension."
+        },
+        {
+          "story_id": "US-018",
+          "feature_id": "F-02.4",
+          "title": "Carrier Approval Step Toggle",
+          "user_story": "As an Admin HIVE User, I want to toggle the Carrier Approval Step ON or OFF so that I can control whether drivers must be approved by a carrier before completing check-in.",
+          "acceptance_criteria": [
+            "Given the settings page loads, When the Carrier Approval Step row renders, Then a toggle is displayed with label 'Carrier Approval Step' defaulting to OFF for new organizations.",
+            "Given the Admin toggles Carrier Approval Step to ON, When the change is saved, Then the mobile app check-in flow includes a carrier approval gate for that organization.",
+            "Given the toggle is rendered, When a keyboard user focuses it and presses Space, Then the state changes and is announced by the screen reader via aria-checked.",
+            "Given the Admin toggles Carrier Approval Step and the API returns an error, When the failure occurs, Then the toggle reverts to its prior state and an inline error is displayed."
+          ],
+          "story_points": 2,
+          "data_sensitivity": "Internal",
+          "depends_on": ["US-010", "US-014"],
+          "change_type": "new",
+          "citation": "FR-06",
+          "reasoning": "Carrier approval is an optional workflow gate. Default OFF ensures minimal friction for new organizations. Error-revert pattern is consistent with other toggles."
+        },
+        {
+          "story_id": "US-019",
+          "feature_id": "F-02.5",
+          "title": "Help Text Component with aria-describedby",
+          "user_story": "As an Admin HIVE User, I want contextual help text displayed alongside settings so that I understand what each setting controls without leaving the page.",
+          "acceptance_criteria": [
+            "Given a setting row with configured help text, When the page renders, Then the help text is displayed below or beside the setting label in a muted style.",
+            "Given the help text element, When a screen reader user focuses the associated toggle or input, Then the help text is announced via aria-describedby linking the input to the help text element's id.",
+            "Given a setting row without configured help text, When the page renders, Then no help text element is rendered, no empty aria-describedby reference exists, and the console logs no errors for missing help text references.",
+            "Given the help text contains a long description, When it renders, Then it is truncated to 200 characters with a 'Read more' expandable link that reveals the full text.",
+            "Given the 'Read more' link, When a keyboard user activates it, Then the full text expands and focus remains on the link which now reads 'Show less'."
+          ],
+          "story_points": 2,
+          "data_sensitivity": "Public",
+          "depends_on": ["US-009"],
+          "change_type": "new",
+          "citation": "FR-23",
+          "reasoning": "Contextual help reduces support burden and improves admin self-service. aria-describedby is the WCAG-recommended pattern for supplementary descriptions. Truncation handles long content gracefully."
+        }
+      ]
+    }
