@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Driver Check In Admin — Complete Wireframes</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--cp:#00C2CB;--cd:#0F0F1A;--cw:#FFF;--cg:#2ECC71;--cr:#E74C3C;--ca:#F7A800;--n50:#F8F9FA;--n100:#F1F3F5;--n200:#E9ECEF;--n400:#ADB5BD;--n600:#6C757D;--n800:#343A40;--n900:#212529;--rm:8px;--rl:12px;--fh:'Poppins',sans-serif;--fb:'Inter',-apple-system,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:var(--fb);background:var(--n50);color:var(--n900);font-size:12px;line-height:1.5}
+h1{text-align:center;padding:24px 0 4px;font-size:20px;font-weight:700;font-family:var(--fh)}
+.sub{text-align:center;color:var(--n400);font-size:11px;margin-bottom:20px}
+.sec{font-family:var(--fh);font-size:14px;font-weight:600;color:var(--cd);margin:20px 0 10px;text-align:center;padding-top:14px;border-top:2px solid var(--n200)}
+.grid{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;padding:0 16px 20px}
+.frame{background:var(--cw);border-radius:10px;border:1.5px solid var(--n200);overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.06);display:flex;flex-direction:column}
+.frame.sm{width:340px;min-height:320px}.frame.md{width:500px;min-height:320px}.frame.lg{width:780px;min-height:380px}.frame.xl{width:980px;min-height:420px}
+.hdr{height:40px;background:var(--n100);display:flex;align-items:center;padding:0 12px;gap:8px;flex-shrink:0;border-bottom:1px solid var(--n200)}
+.hdr .lo{font-family:var(--fh);font-size:12px;font-weight:700;color:var(--n900)}.hdr .sp{flex:1}
+.hdr .fc{font-size:9px;color:var(--n600);background:var(--n200);padding:3px 8px;border-radius:4px}
+.hdr .av{width:24px;height:24px;border-radius:50%;background:var(--cp);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--cw)}
+.hdr .tabs{display:flex;gap:0;margin-left:12px}.hdr .tab{padding:10px 12px;font-size:10px;color:var(--n400);border-bottom:2px solid transparent;cursor:pointer}.hdr .tab.on{color:var(--n900);border-bottom-color:var(--cp);font-weight:600}
+.lay{display:flex;flex:1;overflow:hidden}
+.nav{width:150px;background:var(--cw);border-right:1px solid var(--n200);padding:6px 0;flex-shrink:0}
+.nav .g{font-size:8px;font-weight:600;color:var(--n400);text-transform:uppercase;letter-spacing:.4px;padding:6px 10px 2px}
+.nav a{display:block;padding:5px 10px;color:var(--n600);text-decoration:none;font-size:10px}
+.nav a.on{background:rgba(0,194,203,.06);color:var(--cp);font-weight:600;border-right:2px solid var(--cp)}
+.ct{flex:1;padding:12px;overflow-y:auto;background:var(--n50)}
+.btn{display:inline-flex;align-items:center;justify-content:center;height:28px;padding:0 12px;border:none;border-radius:6px;font-size:10px;font-weight:600;cursor:pointer;font-family:var(--fb)}
+.bp{background:var(--cp);color:var(--cw)}.bg{background:transparent;color:var(--n800);border:1px solid var(--n200)}.bd{background:var(--cr);color:var(--cw)}.bk{background:var(--cd);color:var(--cw)}
+.fld{margin-bottom:8px}.fld label{display:block;font-size:10px;font-weight:600;color:var(--n800);margin-bottom:2px}
+.fld input,.fld select{width:100%;height:28px;padding:0 8px;border:1px solid var(--n200);border-radius:5px;font-size:11px;font-family:var(--fb)}
+.fld input:focus{outline:none;border-color:var(--cp);box-shadow:0 0 0 2px rgba(0,194,203,.12)}
+.fld .err{font-size:9px;color:var(--cr);margin-top:1px}
+.crd{background:var(--cw);border-radius:8px;padding:10px;box-shadow:0 2px 8px rgba(0,0,0,.04);margin-bottom:8px;border:1px solid var(--n100)}
+.bdg{display:inline-flex;padding:1px 6px;border-radius:999px;font-size:8px;font-weight:600;text-transform:uppercase}
+.ba{background:rgba(46,204,113,.08);color:var(--cg)}.be{background:rgba(231,76,60,.08);color:var(--cr)}.bi{background:rgba(0,194,203,.08);color:var(--cp)}
+.tbl{width:100%;border-collapse:collapse;font-size:10px}
+.tbl th{text-align:left;padding:5px 6px;border-bottom:1.5px solid var(--n200);font-weight:600;color:var(--n600);font-size:9px;text-transform:uppercase}
+.tbl td{padding:5px 6px;border-bottom:1px solid var(--n100)}.tbl tr:hover{background:var(--n50)}
+.modal-overlay{position:absolute;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;z-index:10}
+.modal-box{background:var(--cw);border-radius:10px;padding:16px;width:85%;max-width:340px;box-shadow:0 8px 32px rgba(0,0,0,.15)}
+.modal-box h3{font-family:var(--fh);font-size:12px;font-weight:600;margin-bottom:8px}
+.toggle{position:relative;width:34px;height:18px;flex-shrink:0}.toggle input{opacity:0;width:0;height:0}
+.toggle .sl{position:absolute;cursor:pointer;inset:0;background:var(--n200);border-radius:18px;transition:.3s}
+.toggle .sl:before{content:'';position:absolute;height:14px;width:14px;left:2px;bottom:2px;background:var(--cw);border-radius:50%;transition:.3s}
+.toggle input:checked+.sl{background:var(--cp)}.toggle input:checked+.sl:before{transform:translateX(16px)}
+.toggle input:disabled+.sl{opacity:.5;cursor:not-allowed}
+.setting{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--n100)}.setting:last-child{border:none}
+.setting .nm{font-size:11px;font-weight:600;color:var(--n900);margin-bottom:2px}
+.setting .help{font-size:8px;color:var(--n400);margin-top:2px;font-style:italic}
+.setting input[type="text"],.setting textarea{width:100%;height:26px;padding:0 6px;border:1px solid var(--n200);border-radius:4px;font-size:10px;font-family:var(--fb);margin-top:3px}
+.setting textarea{height:50px;padding:4px 6px;resize:vertical}
+.setting input:disabled,.setting textarea:disabled{background:var(--n100);color:var(--n400)}
+.setting input.er{border-color:var(--cr)}.setting .em{font-size:8px;color:var(--cr);margin-top:1px}
+.note{font-size:8px;color:var(--n400);margin-top:4px;padding:4px 6px;background:var(--n100);border-radius:4px}
+.err-banner{background:rgba(231,76,60,.06);border:1px solid rgba(231,76,60,.15);border-radius:6px;padding:8px;font-size:10px;color:var(--cr)}
+</style>
+</head>
+<body>
+<h1>Driver Check In Admin — Complete Wireframes</h1>
+<div class="sub">The Hive · All 5 Epics · 35 Stories · Schreiber Horizon Design System</div>
+
+<!-- ═══ EP-01: FOUNDATION ═══ -->
+<div class="sec">EP-01: Platform Foundation (Sprint 1)</div>
+
+<div class="grid">
+  <!-- Login Default -->
+  <div class="frame sm">
+    <div style="background:linear-gradient(135deg,#0F0F1A,#1A1A30);padding:28px 20px;text-align:center">
+      <div style="font-family:var(--fh);font-size:18px;font-weight:700;color:var(--cp)">The Hive</div>
+      <div style="font-size:9px;color:rgba(255,255,255,.4)">Driver Check In Administration</div>
+    </div>
+    <div style="padding:14px;flex:1">
+      <div class="fld"><label>Email</label><input placeholder="jsmith@schreiber.com"></div>
+      <div class="fld"><label>Password</label><input type="password" placeholder="••••••••"></div>
+      <button class="btn bp" style="width:100%;height:32px;margin-top:4px">Sign In</button>
+      <div style="text-align:center;margin-top:6px"><a style="font-size:9px;color:var(--cp)">Forgot password?</a></div>
+    </div>
+    <div class="note">US-001 · Default state · JWT RS256 · HttpOnly cookie · bcrypt</div>
+  </div>
+
+  <!-- Login Error -->
+  <div class="frame sm">
+    <div style="background:linear-gradient(135deg,#0F0F1A,#1A1A30);padding:28px 20px;text-align:center">
+      <div style="font-family:var(--fh);font-size:18px;font-weight:700;color:var(--cp)">The Hive</div>
+    </div>
+    <div style="padding:14px;flex:1">
+      <div class="err-banner">⚠️ Invalid email or password</div>
+      <div class="fld" style="margin-top:6px"><label>Email</label><input value="jsmith@schreiber.com"></div>
+      <div class="fld"><label>Password</label><input type="password" value="wrong"></div>
+      <button class="btn bp" style="width:100%;height:32px">Sign In</button>
+      <div style="font-size:8px;color:var(--n400);text-align:center;margin-top:4px">4 attempts remaining · Locked after 5 (30 min)</div>
+    </div>
+    <div class="note">US-001 · Error + Locked states · Constant-time response</div>
+  </div>
+
+  <!-- 403 Page -->
+  <div class="frame sm">
+    <div class="hdr"><span class="lo">The Hive</span><span class="sp"></span><div class="av">ED</div></div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center">
+      <div style="font-size:36px;margin-bottom:6px">🚫</div>
+      <div style="font-family:var(--fh);font-size:14px;font-weight:600;color:var(--cr)">Access Denied</div>
+      <p style="font-size:10px;color:var(--n600);margin:6px 0">You don't have permission to access this page. Contact your administrator.</p>
+      <button class="btn bp">← Back to Dashboard</button>
+    </div>
+    <div class="note">US-004 · Non-admin role → 403 · Security event logged</div>
+  </div>
+
+  <!-- Admin Menu + Tab System -->
+  <div class="frame lg">
+    <div class="hdr">
+      <span class="lo">The Hive</span>
+      <div class="tabs"><div class="tab">Inventory</div><div class="tab">Work Orders</div><div class="tab on">Driver Check In Admin</div></div>
+      <span class="sp"></span><span class="fc">🏭 Green Bay, WI</span><div class="av">JS</div>
+    </div>
+    <div class="lay">
+      <nav class="nav">
+        <div class="g">Administration</div>
+        <a>👥 Users</a>
+        <a>🏢 Organizations</a>
+        <a class="on">🚛 Driver Check In Set Up</a>
+        <a>⚙️ Settings</a>
+      </nav>
+      <main class="ct">
+        <div style="font-family:var(--fh);font-size:13px;font-weight:600;margin-bottom:8px">Driver Check In Admin</div>
+        <div style="font-size:10px;color:var(--n400)">Tab opens from Administration → Driver Check In Set Up dropdown</div>
+        <div style="margin-top:12px;padding:20px;border:2px dashed var(--n200);border-radius:8px;text-align:center;color:var(--n400)">Settings content loads here (Sprint 2)</div>
+      </main>
+    </div>
+    <div class="note">US-007, US-008 · Admin menu dropdown · New HIVE tab · Tab name: "Driver Check In Admin"</div>
+  </div>
+
+  <!-- Organization Management -->
+  <div class="frame lg">
+    <div class="hdr"><span class="lo">The Hive</span><div class="tabs"><div class="tab on">Organizations</div></div><span class="sp"></span><span class="fc">🏭 Green Bay, WI</span><div class="av">JS</div></div>
+    <div class="lay">
+      <nav class="nav"><div class="g">Administration</div><a>👥 Users</a><a class="on">🏢 Organizations</a><a>🚛 Driver Check In Set Up</a></nav>
+      <main class="ct">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="font-family:var(--fh);font-size:13px;font-weight:600">Organizations</div>
+          <button class="btn bp">+ New Organization</button>
+        </div>
+        <div class="crd" style="padding:0"><table class="tbl"><thead><tr><th>Name</th><th>Address</th><th>Phone</th><th>Users</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+          <tr><td><strong>Schreiber Foods - Green Bay</strong></td><td>Green Bay, WI</td><td>(920) 555-0100</td><td>12</td><td><span class="bdg ba">Active</span></td><td><a style="color:var(--cp);font-size:9px">Edit</a></td></tr>
+          <tr><td><strong>Schreiber Foods - Logan</strong></td><td>Logan, UT</td><td>(435) 555-0200</td><td>8</td><td><span class="bdg ba">Active</span></td><td><a style="color:var(--cp);font-size:9px">Edit</a></td></tr>
+          <tr><td><strong>Schreiber Foods - Carthage</strong></td><td>Carthage, MO</td><td>(417) 555-0300</td><td>5</td><td><span class="bdg ba">Active</span></td><td><a style="color:var(--cp);font-size:9px">Edit</a></td></tr>
+        </tbody></table></div>
+        <div class="note">US-005, US-006 · Org CRUD · Phone field for {TRAFFIC_CLERK_PHONE} · User assignment via Edit</div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Create Org Modal -->
+  <div class="frame md" style="position:relative">
+    <div class="hdr"><span class="lo">The Hive</span></div>
+    <div style="flex:1;background:var(--n50);filter:blur(1px)"></div>
+    <div class="modal-overlay"><div class="modal-box">
+      <h3>Create Organization</h3>
+      <div class="fld"><label>Name *</label><input placeholder="Schreiber Foods - Carthage"></div>
+      <div class="fld"><label>Address *</label><input placeholder="123 Industrial Blvd, Carthage, MO"></div>
+      <div class="fld"><label>Phone *</label><input placeholder="(417) 555-0300"></div>
+      <div style="display:flex;gap:6px;margin-top:8px"><button class="btn bp" style="flex:1">Create</button><button class="btn bg" style="flex:1">Cancel</button></div>
+    </div></div>
+    <div class="note">US-005 · Phone used as {TRAFFIC_CLERK_PHONE} in Early Check In instruction</div>
+  </div>
+</div>
+
+<!-- ═══ EP-02/03: SETTINGS PAGE ═══ -->
+<div class="sec">EP-02 + EP-03: Complete Settings Page (Sprint 2-3)</div>
+
+<div class="grid">
+  <!-- Full Settings Page -->
+  <div class="frame xl">
+    <div class="hdr">
+      <span class="lo">The Hive</span>
+      <div class="tabs"><div class="tab">Inventory</div><div class="tab on">Driver Check In Admin</div></div>
+      <span class="sp"></span><span class="fc">🏭 Green Bay, WI</span><div class="av">JS</div>
+    </div>
+    <div class="lay">
+      <nav class="nav"><div class="g">Administration</div><a>👥 Users</a><a>🏢 Organizations</a><a class="on">🚛 Driver Check In Set Up</a></nav>
+      <main class="ct">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div style="font-family:var(--fh);font-size:14px;font-weight:600">Driver Check In Admin</div>
+          <span style="font-size:8px;color:var(--n400)">Changes auto-saved on focus out · <span style="color:var(--cg)">✓ Saved</span></span>
+        </div>
+        <div class="crd">
+          <!-- 1. Organization Name -->
+          <div class="setting"><label class="toggle"><input type="checkbox" checked disabled><span class="sl"></span></label><div style="flex:1"><div class="nm">Organization Name</div><input type="text" value="Schreiber Foods - Green Bay" disabled><div class="help">Pre-populated from user login. Toggle always ON.</div></div></div>
+          <!-- 2. QR Code -->
+          <div class="setting"><label class="toggle"><input type="checkbox" checked><span class="sl"></span></label><div style="flex:1"><div class="nm">QR Code Check In Access</div><button class="btn bp" style="margin-top:4px">📱 Generate QR Code</button></div></div>
+          <!-- 3. Driver Name -->
+          <div class="setting"><label class="toggle"><input type="checkbox" checked disabled><span class="sl"></span></label><div style="flex:1"><div class="nm">Driver Name</div><div class="help">Always required. Toggle locked ON.</div></div></div>
+          <!-- 4. Driver ID -->
+          <div class="setting"><label class="toggle"><input type="checkbox" checked><span class="sl"></span></label><div style="flex:1"><div class="nm">Driver ID</div><div class="help">Can be disabled if not required for this facility.</div></div></div>
+          <!-- 5. Driver Phone -->
+          <div class="setting"><label class="toggle"><input type="checkbox" checked disabled><span class="sl"></span></label><div style="flex:1"><div class="nm">Driver Phone Number</div><div class="help">Always required. Toggle locked ON.</div></div></div>
+          <!-- 6. Truck Number -->
+          <div class="setting"><label class="toggle"><input type="checkbox" checked disabled><span class="sl"></span></label><div style="flex:1"><div class="nm">Truck Number</div><div class="help">Always required. Toggle locked ON.</div></div></div>
+          <!-- 7. Carrier Approval -->
+          <div class="setting"><label class="toggle"><input type="checkbox" checked><span class="sl"></span></label><div style="flex:1"><div class="nm">Carrier Approval Step</div><div class="help">Disable to skip carrier approval during check-in.</div></div></div>
+          <!-- 8. Temperature -->
+          <div class="setting"><label class="toggle"><input type="checkbox"><span class="sl"></span></label><div style="flex:1"><div class="nm">Temperature Acknowledgement Step</div><input type="text" placeholder="e.g., 35°F - 40°F" disabled><div class="help">Add the Temperature requirements to display during Check In via mobile app. Note, the violation of the Temp rules will not block the Driver to complete Check In process.</div></div></div>
+          <!-- 9. Early Check In -->
+          <div class="setting"><label class="toggle"><input type="checkbox"><span class="sl"></span></label><div style="flex:1"><div class="nm">Early Check In Step</div>
+            <div style="display:flex;gap:6px;align-items:center;margin-top:3px"><label style="font-size:9px;color:var(--n600);white-space:nowrap">Allowed Hours:</label><input type="text" placeholder="e.g., 2" disabled style="width:50px"></div>
+            <div style="margin-top:4px"><label style="font-size:9px;font-weight:600;color:var(--n800)">Early Check In Instruction:</label></div>
+            <textarea disabled>Due to earlier arrival time, you cannot check in via regular process. Please contact Facility Administrator directly via phone number {TRAFFIC_CLERK_PHONE}</textarea>
+            <div class="help">The Instruction will be displayed to a Driver in the mobile app in case of early check in hours limit violation.</div>
+          </div></div>
+          <!-- 10. Confirmation -->
+          <div class="setting"><label class="toggle"><input type="checkbox" checked><span class="sl"></span></label><div style="flex:1"><div class="nm">Confirmation Step</div>
+            <div style="margin-top:3px"><label style="font-size:9px;font-weight:600;color:var(--n800)">Success Message:</label></div>
+            <textarea>Driver Check In is successfully completed! Please wait for the call from Traffic Clerk for Dock assignment and further instructions</textarea>
+            <div class="help">The Instruction is displayed to a Driver in the mobile app in case of successful check in completion.</div>
+          </div></div>
+        </div>
+        <div class="note">US-009–US-024 · 10 settings · Auto-save on focus out · Validation on focus out · Help text via aria-describedby · Toggle OFF disables admin + mobile</div>
+      </main>
+    </div>
+  </div>
+</div>
+
+<!-- Validation States -->
+<div class="grid">
+  <div class="frame md">
+    <div style="padding:12px">
+      <div style="font-family:var(--fh);font-size:11px;font-weight:600;margin-bottom:6px">Validation States (US-012, US-021, US-023)</div>
+      <div class="crd">
+        <div class="setting" style="border:none;padding:4px 0"><label class="toggle"><input type="checkbox" checked><span class="sl"></span></label><div style="flex:1"><div class="nm">Temperature Acknowledgement</div><input type="text" class="er" value=""><div class="em">⚠️ A value is required</div></div></div>
+      </div>
+      <div class="crd">
+        <div class="setting" style="border:none;padding:4px 0"><label class="toggle"><input type="checkbox" checked><span class="sl"></span></label><div style="flex:1"><div class="nm">Temperature Acknowledgement</div><input type="text" class="er" value="abc!@#"><div class="em">⚠️ Invalid format</div></div></div>
+      </div>
+      <div class="crd">
+        <div class="setting" style="border:none;padding:4px 0"><label class="toggle"><input type="checkbox" checked><span class="sl"></span></label><div style="flex:1"><div class="nm">Early Check In — Hours</div><div style="display:flex;gap:4px;align-items:center"><input type="text" class="er" value="abc" style="width:50px"><div class="em">⚠️ Numbers only</div></div></div></div>
+      </div>
+      <div class="note">Validation on focus out · Empty required → "A value is required" · Non-numeric hours → "Numbers only" · Bad temp format → "Invalid format"</div>
+    </div>
+  </div>
+
+  <!-- Save States -->
+  <div class="frame sm">
+    <div style="padding:12px">
+      <div style="font-family:var(--fh);font-size:11px;font-weight:600;margin-bottom:6px">Auto-Save States (US-011, US-013)</div>
+      <div class="crd" style="text-align:center;padding:16px">
+        <div style="font-size:10px;color:var(--n600);margin-bottom:8px">Saving...</div>
+        <div style="width:100%;height:3px;background:var(--n200);border-radius:2px;overflow:hidden"><div style="width:60%;height:100%;background:var(--cp);border-radius:2px"></div></div>
+      </div>
+      <div class="crd" style="text-align:center;padding:16px">
+        <div style="font-size:10px;color:var(--cg)">✓ Saved</div>
+        <div style="font-size:8px;color:var(--n400)">Disappears after 2 seconds</div>
+      </div>
+      <div class="crd" style="text-align:center;padding:16px">
+        <div style="font-size:10px;color:var(--cr)">⚠️ Save failed</div>
+        <button class="btn bg" style="margin-top:4px;font-size:8px">Retry</button>
+      </div>
+      <div class="note">Auto-save on focus out · < 2s · Visual feedback · Error with retry</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ EP-04: QR CODE ═══ -->
+<div class="sec">EP-04: QR Code Generation (Sprint 3)</div>
+
+<div class="grid">
+  <div class="frame md" style="position:relative;min-height:380px">
+    <div class="hdr"><span class="lo">The Hive</span><span class="sp"></span></div>
+    <div style="flex:1;background:var(--n50);filter:blur(2px)"></div>
+    <div class="modal-overlay">
+      <div class="modal-box" style="text-align:center;max-width:360px">
+        <h3>QR Code for Schreiber Foods - Green Bay<br>Driver Check In Access</h3>
+        <div style="width:160px;height:160px;margin:0 auto 12px;background:var(--n100);border:2px dashed var(--n200);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:60px">📱</div>
+        <div style="font-size:9px;color:var(--n400);margin-bottom:12px">Scan to access Driver Check In for this facility</div>
+        <div style="display:flex;gap:6px;justify-content:center">
+          <button class="btn bp">📄 Save as PDF</button>
+          <button class="btn bk">🖨️ Print</button>
+          <button class="btn bg">✕ Close</button>
+        </div>
+      </div>
+    </div>
+    <div class="note" style="position:absolute;bottom:4px;left:4px;right:4px;z-index:20">US-025–US-028 · Title: "QR Code for {ORG_NAME}" · Save as PDF auto-downloads · Print opens system dialog · Close dismisses · Focus trap + Escape</div>
+  </div>
+</div>
+
+<!-- ═══ EP-05: BACKEND (no screens) ═══ -->
+<div class="sec">EP-05: Mobile API & Hardening (Sprint 4) — No New Screens</div>
+<div class="grid">
+  <div class="frame md">
+    <div style="padding:16px;text-align:center">
+      <div style="font-size:28px;margin-bottom:8px">⚙️</div>
+      <div style="font-family:var(--fh);font-size:13px;font-weight:600">Backend-Only Sprint</div>
+      <div style="font-size:10px;color:var(--n600);margin-top:6px;text-align:left">
+        <strong>US-029:</strong> Mobile read-only API (GET /settings/mobile)<br>
+        <strong>US-030:</strong> Toggle OFF → setting absent from mobile response<br>
+        <strong>US-031:</strong> SAST/dependency security scan — zero critical/high<br>
+        <strong>US-032:</strong> WCAG 2.1 AA accessibility audit on all pages<br>
+        <strong>US-033:</strong> API failure handling with error toast and retry<br>
+        <strong>US-034:</strong> Audit logging for all setting changes<br>
+        <strong>US-035:</strong> Optimistic locking for concurrent edits
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TOGGLE REFERENCE ═══ -->
+<div class="sec">Settings Toggle Reference</div>
+<div class="grid">
+  <div class="frame lg">
+    <div style="padding:12px">
+      <table class="tbl">
+        <thead><tr><th>Setting</th><th>Default</th><th>Editable</th><th>Input</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td>Organization Name</td><td style="color:var(--cg)">ON</td><td style="color:var(--cr)">Locked</td><td>Text (disabled, pre-populated)</td><td>—</td></tr>
+          <tr><td>QR Code Check In Access</td><td style="color:var(--cg)">ON</td><td style="color:var(--cg)">Yes</td><td>—</td><td>Generate QR Code</td></tr>
+          <tr><td>Driver Name</td><td style="color:var(--cg)">ON</td><td style="color:var(--cr)">Locked</td><td>—</td><td>—</td></tr>
+          <tr><td>Driver ID</td><td style="color:var(--cg)">ON</td><td style="color:var(--cg)">Yes</td><td>—</td><td>—</td></tr>
+          <tr><td>Driver Phone Number</td><td style="color:var(--cg)">ON</td><td style="color:var(--cr)">Locked</td><td>—</td><td>—</td></tr>
+          <tr><td>Truck Number</td><td style="color:var(--cg)">ON</td><td style="color:var(--cr)">Locked</td><td>—</td><td>—</td></tr>
+          <tr><td>Carrier Approval Step</td><td style="color:var(--cg)">ON</td><td style="color:var(--cg)">Yes</td><td>—</td><td>—</td></tr>
+          <tr><td>Temperature Acknowledgement</td><td style="color:var(--n400)">OFF</td><td style="color:var(--cg)">Yes</td><td>Alphanumeric (temp range)</td><td>—</td></tr>
+          <tr><td>Early Check In Step</td><td style="color:var(--n400)">OFF</td><td style="color:var(--cg)">Yes</td><td>Numeric (hours) + Text (instruction)</td><td>—</td></tr>
+          <tr><td>Confirmation Step</td><td style="color:var(--cg)">ON</td><td style="color:var(--cg)">Yes</td><td>Free text (success message)</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:16px;color:var(--n400);font-size:9px">
+  Driver Check In Admin · 5 Epics · 35 Stories · 10 Settings · Primary #00C2CB · Poppins + Inter · WCAG 2.1 AA
+</div>
+</body>
+</html>
