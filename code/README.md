@@ -15,7 +15,7 @@ A full-stack web application for managing driver check-in workflows, built for t
 ## Project Structure
 
 ```
-sfi-demo/
+sfi-demo/code
 ├── backend/
 │   ├── main.py                  # FastAPI app entry point
 │   ├── pyproject.toml
