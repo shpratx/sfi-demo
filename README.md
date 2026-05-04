@@ -41,6 +41,8 @@ sfi-demo/
 │       ├── hooks/               # useAuth, useSettings
 │       ├── types/
 │       └── styles/
+├── mock-server/
+│   └── server.mjs               # Standalone mock backend (Node.js, no deps)
 └── Design Docs/                 # HLD, LLD, architecture docs
 ```
 
@@ -87,6 +89,28 @@ npm run dev
 ```
 
 The frontend will be available at `http://localhost:5173`. API calls to `/api/*` are proxied to the backend on port 8000.
+
+## Running with the Mock Server (no DB/Redis required)
+
+A standalone mock backend is included for frontend development without Oracle DB, Redis, or Python dependencies. It uses only Node.js built-in modules.
+
+```bash
+# Terminal 1 — start mock backend on port 8000
+node mock-server/server.mjs
+
+# Terminal 2 — start frontend
+cd frontend
+npm run dev
+```
+
+The mock server provides all API routes with realistic seed data:
+- **Auth:** any email/password combination will log in as a Demo Admin
+- **Settings:** 10 pre-seeded driver check-in settings with correct toggle/input states
+- **Organizations:** 2 sample orgs (Green Bay, Logan)
+- **QR Code:** returns a placeholder PNG and PDF
+- **Audit:** 3 sample audit log entries
+
+Open `http://localhost:5173` and log in with any credentials.
 
 ## Environment Variables
 
