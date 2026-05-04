@@ -1,0 +1,17 @@
+@import "./tokens.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--hive-yellow);
+  outline-offset: 2px;
+}

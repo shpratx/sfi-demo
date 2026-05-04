@@ -1,0 +1,36 @@
+:root {
+  /* Colors */
+  --hive-yellow: #F5C518;
+  --hive-yellow-dark: #D4A900;
+  --bg-app: #1A1A1A;
+  --bg-nav: #111111;
+  --bg-page: #E8E8E8;
+  --bg-surface: #FFFFFF;
+  --text-on-dark: #FFFFFF;
+  --text-primary: #1A1A1A;
+  --text-secondary: #555555;
+  --border-light: #E0E0E0;
+  --border-input: #CCCCCC;
+  --border-focus: #F5C518;
+  --status-error: #D32F2F;
+
+  /* Spacing (4px base) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* Typography */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+}
