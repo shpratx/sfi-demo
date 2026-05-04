@@ -26,7 +26,7 @@ export default function QrCodeSection() {
         type="button"
         onClick={handleGenerate}
         disabled={generateQr.isPending}
-        className="inline-flex items-center gap-1.5 rounded bg-hive-yellow px-3.5 py-2 text-xs font-semibold text-text-primary hover:bg-hive-yellow-dark disabled:opacity-50"
+        className="inline-flex items-center gap-1.5 rounded-[3px] bg-hive-yellow px-3.5 py-2 text-xs font-semibold text-text-primary hover:bg-hive-yellow-dark disabled:opacity-50"
       >
         {generateQr.isPending ? (
           <span className="flex items-center gap-2">

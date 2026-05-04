@@ -53,8 +53,38 @@ function params(url) {
   return Object.fromEntries(u.searchParams);
 }
 
-// 1x1 transparent PNG
-const TINY_PNG = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQI12NgAAIABQABNjN9GQAAAAlwSFlzAAAWJQAAFiUBSVIk8AAAAA0lEQVQI12P4z8BQDwAEgAF/QualIQAAAABJRU5ErkJggg==", "base64");
+// QR code SVG matching the wireframe design
+const QR_SVG = `<svg width="190" height="190" viewBox="0 0 190 190" xmlns="http://www.w3.org/2000/svg">
+<rect width="190" height="190" fill="#FFFFFF"/>
+<!-- Corner squares -->
+<rect x="10" y="10" width="40" height="40" rx="2" fill="#1A1A1A"/>
+<rect x="15" y="15" width="30" height="30" rx="1" fill="#FFFFFF"/>
+<rect x="20" y="20" width="20" height="20" rx="1" fill="#1A1A1A"/>
+<rect x="140" y="10" width="40" height="40" rx="2" fill="#1A1A1A"/>
+<rect x="145" y="15" width="30" height="30" rx="1" fill="#FFFFFF"/>
+<rect x="150" y="20" width="20" height="20" rx="1" fill="#1A1A1A"/>
+<rect x="10" y="140" width="40" height="40" rx="2" fill="#1A1A1A"/>
+<rect x="15" y="145" width="30" height="30" rx="1" fill="#FFFFFF"/>
+<rect x="20" y="150" width="20" height="20" rx="1" fill="#1A1A1A"/>
+<!-- Centre Hive hex -->
+<rect x="78" y="78" width="34" height="34" rx="3" fill="white" stroke="#E0E0E0"/>
+<path d="M95 84L87 100L103 100Z" fill="#F5C518"/>
+<path d="M95 87L89 98L101 98Z" fill="#D4A900"/>
+<!-- Data dots -->
+<rect x="60" y="12" width="5" height="5" fill="#1A1A1A"/><rect x="68" y="12" width="5" height="5" fill="#1A1A1A"/><rect x="76" y="12" width="5" height="5" fill="#1A1A1A"/><rect x="84" y="12" width="5" height="5" fill="#1A1A1A"/><rect x="100" y="12" width="5" height="5" fill="#1A1A1A"/><rect x="116" y="12" width="5" height="5" fill="#1A1A1A"/><rect x="124" y="12" width="5" height="5" fill="#1A1A1A"/>
+<rect x="60" y="20" width="5" height="5" fill="#1A1A1A"/><rect x="76" y="20" width="5" height="5" fill="#1A1A1A"/><rect x="92" y="20" width="5" height="5" fill="#1A1A1A"/><rect x="108" y="20" width="5" height="5" fill="#1A1A1A"/><rect x="124" y="20" width="5" height="5" fill="#1A1A1A"/>
+<rect x="60" y="28" width="5" height="5" fill="#1A1A1A"/><rect x="68" y="28" width="5" height="5" fill="#1A1A1A"/><rect x="84" y="28" width="5" height="5" fill="#1A1A1A"/><rect x="100" y="28" width="5" height="5" fill="#1A1A1A"/><rect x="108" y="28" width="5" height="5" fill="#1A1A1A"/>
+<rect x="12" y="60" width="5" height="5" fill="#1A1A1A"/><rect x="20" y="60" width="5" height="5" fill="#1A1A1A"/><rect x="28" y="68" width="5" height="5" fill="#1A1A1A"/><rect x="12" y="76" width="5" height="5" fill="#1A1A1A"/><rect x="36" y="76" width="5" height="5" fill="#1A1A1A"/>
+<rect x="12" y="108" width="5" height="5" fill="#1A1A1A"/><rect x="28" y="108" width="5" height="5" fill="#1A1A1A"/><rect x="36" y="116" width="5" height="5" fill="#1A1A1A"/><rect x="12" y="124" width="5" height="5" fill="#1A1A1A"/>
+<rect x="156" y="60" width="5" height="5" fill="#1A1A1A"/><rect x="164" y="68" width="5" height="5" fill="#1A1A1A"/><rect x="172" y="60" width="5" height="5" fill="#1A1A1A"/><rect x="156" y="76" width="5" height="5" fill="#1A1A1A"/><rect x="172" y="76" width="5" height="5" fill="#1A1A1A"/>
+<rect x="148" y="108" width="5" height="5" fill="#1A1A1A"/><rect x="164" y="108" width="5" height="5" fill="#1A1A1A"/><rect x="156" y="116" width="5" height="5" fill="#1A1A1A"/><rect x="172" y="124" width="5" height="5" fill="#1A1A1A"/>
+<rect x="60" y="156" width="5" height="5" fill="#1A1A1A"/><rect x="68" y="164" width="5" height="5" fill="#1A1A1A"/><rect x="76" y="156" width="5" height="5" fill="#1A1A1A"/><rect x="84" y="172" width="5" height="5" fill="#1A1A1A"/><rect x="100" y="156" width="5" height="5" fill="#1A1A1A"/><rect x="108" y="164" width="5" height="5" fill="#1A1A1A"/><rect x="124" y="156" width="5" height="5" fill="#1A1A1A"/>
+<rect x="60" y="60" width="5" height="5" fill="#1A1A1A"/><rect x="68" y="68" width="5" height="5" fill="#1A1A1A"/><rect x="60" y="76" width="5" height="5" fill="#1A1A1A"/>
+<rect x="120" y="60" width="5" height="5" fill="#1A1A1A"/><rect x="128" y="68" width="5" height="5" fill="#1A1A1A"/><rect x="120" y="76" width="5" height="5" fill="#1A1A1A"/>
+<rect x="60" y="120" width="5" height="5" fill="#1A1A1A"/><rect x="68" y="128" width="5" height="5" fill="#1A1A1A"/><rect x="76" y="120" width="5" height="5" fill="#1A1A1A"/>
+<rect x="120" y="120" width="5" height="5" fill="#1A1A1A"/><rect x="128" y="128" width="5" height="5" fill="#1A1A1A"/><rect x="120" y="128" width="5" height="5" fill="#1A1A1A"/>
+</svg>`;
+const QR_PNG = Buffer.from(QR_SVG);
 // Minimal PDF
 const TINY_PDF = Buffer.from("%PDF-1.0\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj\n3 0 obj<</Type/Page/MediaBox[0 0 612 792]/Parent 2 0 R>>endobj\nxref\n0 4\n0000000000 65535 f \n0000000009 00000 n \n0000000058 00000 n \n0000000115 00000 n \ntrailer<</Size 4/Root 1 0 R>>\nstartxref\n190\n%%EOF");
 
@@ -112,8 +142,8 @@ const server = http.createServer(async (req, res) => {
 
   // QR Code
   if (path === "/api/v1/driver-checkin/qr-code" && method === "POST") {
-    res.writeHead(200, { "Content-Type": "image/png", "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "*" });
-    return res.end(TINY_PNG);
+    res.writeHead(200, { "Content-Type": "image/svg+xml", "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "*" });
+    return res.end(QR_PNG);
   }
   if (path === "/api/v1/driver-checkin/qr-code/pdf" && method === "GET") {
     res.writeHead(200, { "Content-Type": "application/pdf", "Content-Disposition": "attachment; filename=qr-code.pdf", "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "*" });

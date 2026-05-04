@@ -6,10 +6,10 @@ import SaveIndicator from "./SettingsPage/components/SaveIndicator";
 
 function SkeletonRows() {
   return (
-    <div className="animate-pulse space-y-3">
+    <div className="animate-pulse space-y-3 p-4">
       {Array.from({ length: 6 }, (_, i) => (
-        <div key={i} className="flex items-center gap-3 px-4 py-3">
-          <div className="h-6 w-10 rounded-full bg-border-light" />
+        <div key={i} className="flex items-center gap-3">
+          <div className="h-[22px] w-10 rounded-full bg-border-light" />
           <div className="h-4 w-48 rounded bg-border-light" />
         </div>
       ))}
@@ -20,11 +20,11 @@ function SkeletonRows() {
 function ErrorState({ onRetry }: { onRetry: () => void }) {
   return (
     <div role="alert" className="flex flex-col items-center gap-3 py-10">
-      <p className="text-text-secondary">Failed to load settings.</p>
+      <p className="text-[13px] text-text-secondary">Failed to load settings.</p>
       <button
         type="button"
         onClick={onRetry}
-        className="rounded bg-hive-yellow px-4 py-2 text-sm font-semibold text-text-primary hover:bg-hive-yellow-dark"
+        className="h-8 rounded-[3px] bg-hive-yellow px-3.5 text-xs font-semibold text-text-primary hover:bg-hive-yellow-dark"
       >
         Retry
       </button>
@@ -49,13 +49,11 @@ export default function SettingsPage() {
   }
 
   const sorted = settings?.slice().sort((a, b) => a.displayOrder - b.displayOrder);
-  const identity = sorted?.filter((s) => s.displayOrder <= 6);
-  const config = sorted?.filter((s) => s.displayOrder > 6);
 
   return (
-    <div className="mx-auto max-w-3xl p-6">
-      <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-[16px] font-semibold">Driver Check In Admin</h1>
+    <div className="p-4">
+      <div className="mb-3.5 flex items-center justify-between">
+        <span className="text-[15px] font-bold text-text-primary">Driver Check In Admin</span>
         <SaveIndicator
           status={saveStatus}
           onRetry={() => {
@@ -67,7 +65,7 @@ export default function SettingsPage() {
       </div>
 
       {isLoading && (
-        <div className="rounded-lg bg-bg-surface shadow-sm" aria-busy="true" aria-label="Loading settings">
+        <div className="rounded-[3px] border border-border-light bg-bg-surface" aria-busy="true" aria-label="Loading settings">
           <SkeletonRows />
         </div>
       )}
@@ -75,28 +73,10 @@ export default function SettingsPage() {
       {isError && <ErrorState onRetry={() => void refetch()} />}
 
       {sorted && (
-        <div className="space-y-6">
-          {identity && identity.length > 0 && (
-            <section role="group" aria-label="Driver Identity">
-              <h2 className="mb-2 text-sm font-semibold text-text-secondary">Driver Identity</h2>
-              <div className="rounded-lg bg-bg-surface shadow-sm">
-                {identity.map((s) => (
-                  <SettingRow key={s.id} setting={s} onUpdate={handleUpdate} />
-                ))}
-              </div>
-            </section>
-          )}
-
-          {config && config.length > 0 && (
-            <section role="group" aria-label="Check In Configuration">
-              <h2 className="mb-2 text-sm font-semibold text-text-secondary">Check In Configuration</h2>
-              <div className="rounded-lg bg-bg-surface shadow-sm">
-                {config.map((s) => (
-                  <SettingRow key={s.id} setting={s} onUpdate={handleUpdate} />
-                ))}
-              </div>
-            </section>
-          )}
+        <div className="rounded-[3px] border border-border-light bg-bg-surface">
+          {sorted.map((s) => (
+            <SettingRow key={s.id} setting={s} onUpdate={handleUpdate} />
+          ))}
         </div>
       )}
     </div>

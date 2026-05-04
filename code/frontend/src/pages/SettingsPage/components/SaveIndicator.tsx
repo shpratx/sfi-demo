@@ -20,18 +20,16 @@ export default function SaveIndicator({
     }
   }, [status]);
 
-  if (!visible) return <span aria-live="polite" className="text-sm" />;
+  if (!visible) {
+    return <span aria-live="polite" className="text-[11px] italic text-[#888]">Changes auto-saved on focus out</span>;
+  }
 
   return (
-    <span aria-live="polite" className="text-sm">
-      {status === "saving" && <span className="text-text-secondary">Saving…</span>}
-      {status === "saved" && <span className="text-text-secondary">Saved</span>}
+    <span aria-live="polite" className="text-[11px] italic">
+      {status === "saving" && <span className="text-[#888]">Saving…</span>}
+      {status === "saved" && <span className="text-[#888]">✓ Saved</span>}
       {status === "error" && (
-        <button
-          type="button"
-          onClick={onRetry}
-          className="text-status-error underline"
-        >
+        <button type="button" onClick={onRetry} className="text-[#D32F2F] underline">
           Error – Retry
         </button>
       )}
