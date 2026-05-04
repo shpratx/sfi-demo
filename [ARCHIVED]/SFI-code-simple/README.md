@@ -7,6 +7,7 @@ FastAPI backend + React frontend covering the major flows in `hive-user-flows.md
 ```bash
 # backend
 cd backend
+rm -rf .venv
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 uvicorn main:app --reload --port 8000

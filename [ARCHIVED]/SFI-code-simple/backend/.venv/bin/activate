@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/Users/admin/Documents/SFI-code-simple/backend/.venv"
+VIRTUAL_ENV="/Users/admin/Desktop/sfi-github-sync/sfi-demo/[ARCHIVED]/SFI-code-simple/backend/.venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
