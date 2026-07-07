@@ -7,7 +7,7 @@ export default function Home() {
     <div>
       <h1 className="page-h1">Welcome, {user?.name}</h1>
       <p style={{ color: 'var(--text-secondary)', marginBottom: 18 }}>
-        HIVE — Schreiber Foods enterprise WMS · Role: <strong>{user?.role}</strong>
+        IMS — Enterprise WMS · Role: <strong>{user?.role}</strong>
       </p>
 
       <div className="home-grid">

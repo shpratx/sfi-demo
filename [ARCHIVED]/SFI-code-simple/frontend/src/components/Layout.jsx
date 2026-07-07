@@ -66,7 +66,7 @@ export default function Layout({ children, showSidebar = true }) {
       <div className="topbar">
         <div className="t-logo" onClick={() => navigate('/home')} style={{ cursor: 'pointer' }}>
           <HexLogo />
-          <div className="t-wordmark"><span className="the">THE</span><span className="hive">HIVE</span></div>
+          <div className="t-wordmark"><span className="the">THE</span><span className="ims">IMS</span></div>
         </div>
 
         {/* Top-level menu items */}
@@ -117,7 +117,7 @@ export default function Layout({ children, showSidebar = true }) {
         <button className="btn btn-secondary" style={{ marginLeft: 8, height: 28 }} onClick={logout}>Logout</button>
       </div>
 
-      {/* Sub-tab bar (open HIVE tabs) */}
+      {/* Sub-tab bar (open IMS tabs) */}
       {tabs.length > 0 && (
         <div className="subtab-bar" role="tablist">
           {tabs.map((t) => (

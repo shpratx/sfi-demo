@@ -4,7 +4,7 @@ import { setSession } from '../auth'
 import { HexLogo } from '../components/Layout'
 
 export default function Login() {
-  const [email, setEmail] = useState('admin@schreiber.com')
+  const [email, setEmail] = useState('admin@enterprise.com')
   const [password, setPassword] = useState('admin')
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -38,7 +38,7 @@ export default function Login() {
         <div className="login-logo">
           <HexLogo size={42} />
           <div className="t-wordmark" style={{ fontSize: 22 }}>
-            <span className="the">THE</span><span className="hive">HIVE</span>
+            <span className="the">THE</span><span className="ims">IMS</span>
           </div>
         </div>
         <div className="login-sub">Driver Check In Admin</div>
@@ -57,8 +57,8 @@ export default function Login() {
 
         <div className="login-hint">
           <strong>Demo accounts</strong><br/>
-          admin@schreiber.com / admin (ADMIN)<br/>
-          user@schreiber.com / user (STANDARD)
+          admin@enterprise.com / admin (ADMIN)<br/>
+          user@enterprise.com / user (STANDARD)
         </div>
       </form>
     </div>

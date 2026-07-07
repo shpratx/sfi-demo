@@ -27,11 +27,11 @@ function GlobalListeners() {
   useEffect(() => {
     const onUnauth = () => navigate('/login')
     const onForbidden = () => navigate('/403')
-    window.addEventListener('hive:unauthorized', onUnauth)
-    window.addEventListener('hive:forbidden', onForbidden)
+    window.addEventListener('ims:unauthorized', onUnauth)
+    window.addEventListener('ims:forbidden', onForbidden)
     return () => {
-      window.removeEventListener('hive:unauthorized', onUnauth)
-      window.removeEventListener('hive:forbidden', onForbidden)
+      window.removeEventListener('ims:unauthorized', onUnauth)
+      window.removeEventListener('ims:forbidden', onForbidden)
     }
   }, [navigate])
   return null
