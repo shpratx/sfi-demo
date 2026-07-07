@@ -17,8 +17,8 @@ function parse(val: string): CompositeValue {
   }
 }
 
-const inputCls = "h-[30px] rounded-[3px] border border-border-input px-2 text-xs text-text-primary focus:outline-none focus:border-hive-yellow focus:shadow-[0_0_0_2px_rgba(245,197,24,0.2)]";
-const textareaCls = "w-full h-16 rounded-[3px] border border-border-input px-2 py-[7px] text-xs text-text-primary resize-y focus:outline-none focus:border-hive-yellow focus:shadow-[0_0_0_2px_rgba(245,197,24,0.2)]";
+const inputCls = "h-[30px] rounded-[3px] border border-border-input px-2 text-xs text-text-primary focus:outline-none focus:border-ims-yellow focus:shadow-[0_0_0_2px_rgba(245,197,24,0.2)]";
+const textareaCls = "w-full h-16 rounded-[3px] border border-border-input px-2 py-[7px] text-xs text-text-primary resize-y focus:outline-none focus:border-ims-yellow focus:shadow-[0_0_0_2px_rgba(245,197,24,0.2)]";
 
 export default function CompositeInput({
   value,

@@ -1,8 +1,8 @@
 // Tiny auth helper — token in localStorage, fetch wrapper that injects it
 // and surfaces 401/403 via a shared event.
 
-const KEY_TOKEN = 'hive.token'
-const KEY_USER = 'hive.user'
+const KEY_TOKEN = 'ims.token'
+const KEY_USER = 'ims.user'
 
 export function getToken() { return localStorage.getItem(KEY_TOKEN) }
 export function getUser() {
@@ -32,11 +32,11 @@ export async function api(path, opts = {}) {
   })
   if (res.status === 401) {
     clearSession()
-    window.dispatchEvent(new CustomEvent('hive:unauthorized'))
+    window.dispatchEvent(new CustomEvent('ims:unauthorized'))
     throw new Error('Session expired')
   }
   if (res.status === 403) {
-    window.dispatchEvent(new CustomEvent('hive:forbidden'))
+    window.dispatchEvent(new CustomEvent('ims:forbidden'))
     throw new Error('Access denied')
   }
   return res

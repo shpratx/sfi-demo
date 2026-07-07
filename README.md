@@ -1,2 +1,2 @@
-# SFI Demo - hive application
-May 2026
+# Demo: IMS - Inventory Management System (IMS_
+July 2026

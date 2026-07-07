@@ -13,7 +13,7 @@ from sqlalchemy.orm import Session
 from app.core.exceptions import NotFoundError
 from app.domain.models.organization import Organization
 
-_BASE_URL = "https://hive.schreiber.com/checkin"
+_BASE_URL = "https://ims.enterprise.com/checkin"
 
 
 class QrService:

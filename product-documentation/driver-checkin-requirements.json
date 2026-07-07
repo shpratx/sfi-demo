@@ -1,18 +1,18 @@
 {
-  "document_title": "Driver Check In App \u2014 Administrative Module: Driver Check In Set Up Page in HIVE",
-  "source_summary": "An admin configuration page within The Hive WMS that allows facility administrators to set up and manage the driver check-in process, including toggling check-in steps, configuring temperature and early arrival rules, generating QR codes for mobile access, and customizing confirmation messages \u2014 all scoped per organization/facility.",
+  "document_title": "Driver Check In App \u2014 Administrative Module: Driver Check In Set Up Page in IMS",
+  "source_summary": "An admin configuration page within The IMS WMS that allows facility administrators to set up and manage the driver check-in process, including toggling check-in steps, configuring temperature and early arrival rules, generating QR codes for mobile access, and customizing confirmation messages \u2014 all scoped per organization/facility.",
   "functional_requirements": [
     {
       "id": "FR-01",
       "title": "Driver Check In Admin Page Navigation",
-      "description": "The Driver Check In Admin page must be accessible from the HIVE Administration menu as a dropdown option labeled 'Driver Check In Set Up'. Selecting it opens a new HIVE tab with page title and tab name 'Driver Check In Admin'.",
+      "description": "The Driver Check In Admin page must be accessible from the IMS Administration menu as a dropdown option labeled 'Driver Check In Set Up'. Selecting it opens a new IMS tab with page title and tab name 'Driver Check In Admin'.",
       "user_facing": true,
       "priority": "Must-Have",
       "baseline_classification": "new",
       "baseline_reference": null,
       "baseline_impact": null,
       "citation": {
-        "source_reference": "Verify the Driver Check In Admin Page is available in HIVE system under Administration menu: Dropdown option: Driver Check In Set Up...a separate 'Driver Check In Admin' HIVE page is opened in a new HIVE tab. Page title and Tab Name: Driver Check In Admin",
+        "source_reference": "Verify the Driver Check In Admin Page is available in IMS system under Administration menu: Dropdown option: Driver Check In Set Up...a separate 'Driver Check In Admin' IMS page is opened in a new IMS tab. Page title and Tab Name: Driver Check In Admin",
         "source_location": "Acceptance Criteria \u2014 AC#1, AC#2"
       },
       "reasoning": "Navigation and page structure is a distinct testable capability. Must-Have because it's the entry point for all other features."
@@ -245,14 +245,14 @@
     {
       "id": "FR-17",
       "title": "User Authentication and Session Management",
-      "description": "Users must authenticate via email/password or SSO to access the HIVE system. Sessions managed with secure tokens. Admin role required for Driver Check In Admin page access.",
+      "description": "Users must authenticate via email/password or SSO to access the IMS system. Sessions managed with secure tokens. Admin role required for Driver Check In Admin page access.",
       "user_facing": true,
       "priority": "Must-Have",
       "baseline_classification": "new",
       "baseline_reference": null,
       "baseline_impact": null,
       "citation": {
-        "source_reference": "As an Admin HIVE User \u2014 implies authenticated user with Admin role",
+        "source_reference": "As an Admin IMS User \u2014 implies authenticated user with Admin role",
         "source_location": "User Story 1"
       },
       "reasoning": "Greenfield build requires authentication. Source implies authenticated admin users but doesn't specify mechanism."
@@ -267,7 +267,7 @@
       "baseline_reference": null,
       "baseline_impact": null,
       "citation": {
-        "source_reference": "As an Admin HIVE User \u2014 role-based access implied",
+        "source_reference": "As an Admin IMS User \u2014 role-based access implied",
         "source_location": "User Story 1"
       },
       "reasoning": "NFR-04 requires admin-only access. Greenfield needs role management to enforce this."
@@ -428,7 +428,7 @@
         "source_reference": "Not explicitly stated in source",
         "source_location": "N/A \u2014 inferred from enterprise standards"
       },
-      "reasoning": "Source does not mention accessibility. Flagged as Should-Have based on enterprise standards (EA14 in kb-L1-hive-enterprise-architecture). Gap flagged below."
+      "reasoning": "Source does not mention accessibility. Flagged as Should-Have based on enterprise standards (EA14 in kb-L1-IMS-enterprise-architecture). Gap flagged below."
     },
     {
       "id": "NFR-04",
@@ -437,22 +437,22 @@
       "description": "The Driver Check In Admin page must only be accessible to users with Admin role. Non-admin users must not see the menu option or be able to access the page directly.",
       "priority": "Must-Have",
       "citation": {
-        "source_reference": "As an Admin HIVE User, I want to be able to set up driver check-in process",
+        "source_reference": "As an Admin IMS User, I want to be able to set up driver check-in process",
         "source_location": "User Story 1"
       },
-      "reasoning": "User story specifies 'Admin HIVE User' \u2014 implies role-based access control. Must-Have for security."
+      "reasoning": "User story specifies 'Admin IMS User' \u2014 implies role-based access control. Must-Have for security."
     }
   ],
   "constraints": [
     {
       "id": "CON-01",
       "type": "Technology",
-      "description": "Must be implemented within the existing HIVE system as a new page/tab, not a standalone application.",
+      "description": "Must be implemented within the existing IMS system as a new page/tab, not a standalone application.",
       "citation": {
-        "source_reference": "set up driver check-in process...directly in HIVE system...a separate 'Driver Check In Admin' HIVE page is opened in a new HIVE tab",
+        "source_reference": "set up driver check-in process...directly in IMS system...a separate 'Driver Check In Admin' IMS page is opened in a new IMS tab",
         "source_location": "User Story 1, AC#2"
       },
-      "reasoning": "The page must integrate into the existing HIVE navigation and tab system, constraining the technology and deployment approach."
+      "reasoning": "The page must integrate into the existing IMS navigation and tab system, constraining the technology and deployment approach."
     },
     {
       "id": "CON-02",
@@ -468,15 +468,15 @@
   "assumptions": [
     {
       "id": "ASM-01",
-      "description": "The HIVE system already has an Administration menu with dropdown navigation, and the new 'Driver Check In Set Up' option will be added to it.",
+      "description": "The IMS system already has an Administration menu with dropdown navigation, and the new 'Driver Check In Set Up' option will be added to it.",
       "needs_confirmation": true,
       "reasoning": "Source says 'under Administration menu' but doesn't confirm the menu exists. Greenfield build needs to create or extend this menu."
     },
     {
       "id": "ASM-02",
-      "description": "The HIVE system supports opening pages in new tabs within the application (not browser tabs).",
+      "description": "The IMS system supports opening pages in new tabs within the application (not browser tabs).",
       "needs_confirmation": true,
-      "reasoning": "Source says 'opened in a new HIVE tab' \u2014 this implies an in-app tab system, not browser tabs. Greenfield build needs to implement this tab system."
+      "reasoning": "Source says 'opened in a new IMS tab' \u2014 this implies an in-app tab system, not browser tabs. Greenfield build needs to implement this tab system."
     },
     {
       "id": "ASM-03",
@@ -502,7 +502,7 @@
       "id": "GAP-01",
       "description": "No accessibility requirements specified",
       "impact": "Cannot ensure the page is usable by users with disabilities or meets compliance standards",
-      "suggested_question": "Should the Driver Check In Admin page meet WCAG 2.1 AA accessibility standards? Are there specific accessibility requirements for HIVE?",
+      "suggested_question": "Should the Driver Check In Admin page meet WCAG 2.1 AA accessibility standards? Are there specific accessibility requirements for IMS?",
       "reasoning": "Enterprise applications typically require WCAG compliance. Source document makes no mention of accessibility."
     },
     {

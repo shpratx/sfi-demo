@@ -5,8 +5,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        "hive-yellow": "#F5C518",
-        "hive-yellow-dark": "#D4A900",
+        "ims-yellow": "#F5C518",
+        "ims-yellow-dark": "#D4A900",
         "bg-app": "#1A1A1A",
         "bg-nav": "#111111",
         "bg-page": "#E8E8E8",

@@ -1,4 +1,4 @@
-# Application Baseline — Driver Check In Admin Module (The Hive, Schreiber Foods)
+# Application Baseline 
 ### kb-L3-driver-checkin-baseline v0.1.0 (Sprint 1)
 ### Living document — updated at the end of each sprint.
 
@@ -8,7 +8,7 @@
 
 | Product | Type | Status | Parameters |
 |---------|------|--------|------------|
-| Driver Check In Admin Module | HIVE Admin Feature | 🔨 Sprint 1 | 10 configurable settings, per-org isolation, QR code generation, mobile app sync |
+| Driver Check In Admin Module | IMS Admin Feature | 🔨 Sprint 1 | 10 configurable settings, per-org isolation, QR code generation, mobile app sync |
 
 ---
 
@@ -19,7 +19,7 @@
 | F-01.1 | Authentication & Session Management | 🔨 Sprint 1 | 1 | Auth | Login, JWT, session, logout |
 | F-01.2 | Role Management & Admin Authorization | 🔨 Sprint 1 | 1 | Auth | Admin vs Standard roles, menu gating, 403 |
 | F-01.3 | Organization Data Model & Management | 🔨 Sprint 1 | 1 | Core | Org CRUD, user-org assignment |
-| F-01.4 | HIVE Navigation Framework & Tab System | 🔨 Sprint 1 | 1 | Core | Admin menu dropdown, in-app tabs |
+| F-01.4 | IMS Navigation Framework & Tab System | 🔨 Sprint 1 | 1 | Core | Admin menu dropdown, in-app tabs |
 | F-02.1 | Settings Page Framework & Toggle List | 📋 Sprint 2 | 2 | Settings | Toggle list layout, loading skeleton |
 | F-02.2 | Auto-Save & Validation Engine | 📋 Sprint 2 | 2 | Settings | Focus-out save, inline validation, save indicator |
 | F-02.3 | Settings Data Model, API & Persistence | 📋 Sprint 2 | 2 | Settings | DB schema, admin CRUD API, per-org persistence |
@@ -46,7 +46,7 @@ Legend: 🔨 = Building | 📋 = Planned | ✅ = Live
 | Login | /login | F-01.1 | 1 | 🔨 |
 | 403 Forbidden | /403 | F-01.2 | 1 | 🔨 |
 | Organization Management | /admin/organizations | F-01.3 | 1 | 🔨 |
-| Driver Check In Admin | /admin/driver-checkin (new HIVE tab) | F-02.1 | 2 | 📋 |
+| Driver Check In Admin | /admin/driver-checkin (new IMS tab) | F-02.1 | 2 | 📋 |
 | QR Code Modal | (overlay on admin page) | F-04.1 | 3 | 📋 |
 
 ---
@@ -79,16 +79,16 @@ Legend: 🔨 = Building | 📋 = Planned | ✅ = Live
 
 | Table | Schema | Key Columns | PII | Sprint |
 |---|---|---|---|---|
-| USERS | HIVE_CORE | ID, EMAIL, PASSWORD_HASH, FULL_NAME, ROLE, IS_ACTIVE | EMAIL (TDE) | 1 |
-| ORGANIZATIONS | HIVE_CORE | ID, NAME, ADDRESS, PHONE, IS_ACTIVE | — | 1 |
-| USER_ORGANIZATIONS | HIVE_CORE | ID, USER_ID(FK), ORG_ID(FK) | — | 1 |
+| USERS | IMS_CORE | ID, EMAIL, PASSWORD_HASH, FULL_NAME, ROLE, IS_ACTIVE | EMAIL (TDE) | 1 |
+| ORGANIZATIONS | IMS_CORE | ID, NAME, ADDRESS, PHONE, IS_ACTIVE | — | 1 |
+| USER_ORGANIZATIONS | IMS_CORE | ID, USER_ID(FK), ORG_ID(FK) | — | 1 |
 
 ### Sprint 2 Tables (📋)
 
 | Table | Schema | Key Columns | Sprint |
 |---|---|---|---|
-| DRIVER_CHECKIN_SETTINGS | HIVE_CHECKIN | ID, ORG_ID(FK), SETTING_NAME, TOGGLE_STATE, INPUT_VALUE, UPDATED_AT, UPDATED_BY | 2 |
-| AUDIT_LOGS | HIVE_CHECKIN | ID, USER_ID, ACTION, SETTING_ID, OLD_VALUE, NEW_VALUE, TIMESTAMP | 4 |
+| DRIVER_CHECKIN_SETTINGS | IMS_CHECKIN | ID, ORG_ID(FK), SETTING_NAME, TOGGLE_STATE, INPUT_VALUE, UPDATED_AT, UPDATED_BY | 2 |
+| AUDIT_LOGS | IMS_CHECKIN | ID, USER_ID, ACTION, SETTING_ID, OLD_VALUE, NEW_VALUE, TIMESTAMP | 4 |
 
 All tables include: ID (PK), CREATED_AT, CREATED_BY, UPDATED_AT, UPDATED_BY, IS_DELETED, VERSION_NUM.
 
@@ -168,7 +168,7 @@ FOR each setting on the Driver Check In Admin page:
 |-----|----------|--------|-------------|
 | ADR-01 | React 18 + TypeScript + Tailwind + Radix UI for frontend | 1 | EA1, EA10 |
 | ADR-02 | Python 3.12 + FastAPI for backend | 1 | EA1, EA2 |
-| ADR-03 | Oracle 19c with HIVE_CORE and HIVE_CHECKIN schemas | 1 | EA1, EA4 |
+| ADR-03 | Oracle 19c with IMS_CORE and IMS_CHECKIN schemas | 1 | EA1, EA4 |
 | ADR-03a | Alembic for database migrations (additive only, zero-downtime) | 1 | EA4 |
 | ADR-04 | JWT RS256 with HttpOnly cookies | 1 | EA5 |
 | ADR-05 | Auto-save on focus out (no explicit save button) | 2 | Source AC |
@@ -261,4 +261,4 @@ FOR each setting on the Driver Check In Admin page:
 | Artifact | File | Content | Status |
 |----------|------|---------|--------|
 | Wireframes (HTML) | driver-checkin-complete-wireframes.html | ALL epics: Login (4 states), 403 page, Admin menu+tabs, Org management+modal, Full settings page (10 settings), Validation states (3 types), Auto-save states (saving/saved/failed), QR modal (PDF/Print/Close), Toggle reference table | ✅ Complete |
-| Design System | schreiber-horizon-design-system.md | Brand tokens, components | ✅ Complete |
+| Design System | ims-design-system.md | Brand tokens, components | ✅ Complete |

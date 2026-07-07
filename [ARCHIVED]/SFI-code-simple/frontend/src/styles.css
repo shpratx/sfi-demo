@@ -55,7 +55,7 @@ body {
 .t-logo { display: flex; align-items: center; gap: 8px; margin-right: 6px; }
 .t-wordmark { font-size: 13px; font-weight: 800; letter-spacing: 0.06em; line-height: 1; white-space: nowrap; }
 .t-wordmark .the { color: var(--text-on-dark); }
-.t-wordmark .hive { color: var(--yellow); }
+.t-wordmark .ims { color: var(--yellow); }
 
 .tab-bar { display: flex; align-items: flex-end; height: 48px; margin-left: 12px; }
 .tab-item {

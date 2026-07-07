@@ -1,5 +1,4 @@
 # Integration Architecture
-## Driver Check In Admin Module — The Hive (Schreiber Foods)
 **Document Version:** 1.0.0
 **Baseline Reference:** kb-L3-driver-checkin-baseline v0.1.0
 **Status:** Greenfield — all sections authored for Sprint 1–4 scope
@@ -10,7 +9,7 @@
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
-│                     HIVE APPLICATION PLATFORM                            │
+│                     IMS APPLICATION PLATFORM                            │
 │                                                                          │
 │  ┌─────────────┐          ┌──────────────────────────────────────────┐  │
 │  │  React SPA  │          │          FastAPI Backend                  │  │
@@ -29,8 +28,8 @@
 │                                 ▼         ▼            ▼                 │
 │                          ┌──────────┐ ┌──────┐ ┌────────────────┐      │
 │                          │Oracle 19c│ │Redis │ │ QR/PDF Library │      │
-│                          │HIVE_CORE │ │  7.x │ │ (in-process)   │      │
-│                          │HIVE_CHKN │ │      │ └────────────────┘      │
+│                          │IMS_CORE │ │  7.x │ │ (in-process)   │      │
+│                          │IMS_CHKN │ │      │ └────────────────┘      │
 │                          └──────────┘ └──────┘                          │
 └──────────────────────────────────────────────────────────────────────────┘
 ```
@@ -41,8 +40,8 @@
 
 | ID | Integration | Direction | Protocol | Auth Method | Data Exchanged | Sprint | Status |
 |----|------------|-----------|----------|-------------|----------------|--------|--------|
-| INT-01 | Oracle 19c (HIVE_CORE) | Outbound (R/W) | SQLAlchemy / oracledb (TCP) | DB service account credentials (vault-managed) | Users, Organizations, UserOrganizations | 1 | 🔨 |
-| INT-02 | Oracle 19c (HIVE_CHECKIN) | Outbound (R/W) | SQLAlchemy / oracledb (TCP) | DB service account credentials (vault-managed) | DriverCheckinSettings, AuditLogs | 2–4 | 📋 |
+| INT-01 | Oracle 19c (IMS_CORE) | Outbound (R/W) | SQLAlchemy / oracledb (TCP) | DB service account credentials (vault-managed) | Users, Organizations, UserOrganizations | 1 | 🔨 |
+| INT-02 | Oracle 19c (IMS_CHECKIN) | Outbound (R/W) | SQLAlchemy / oracledb (TCP) | DB service account credentials (vault-managed) | DriverCheckinSettings, AuditLogs | 2–4 | 📋 |
 | INT-03 | Redis (Session Cache) | Outbound (R/W) | Redis protocol (TCP, TLS) | Redis AUTH token | JWT jti → session reference; JWT blocklist entries | 1 | 🔨 |
 | INT-04 | Python qrcode (in-process) | In-process | Function call | N/A | org_url string → PNG bytes | 3 | 📋 |
 | INT-05 | ReportLab / WeasyPrint (in-process) | In-process | Function call | N/A | PNG bytes + metadata → PDF bytes | 3 | 📋 |
@@ -59,7 +58,7 @@
 | Protocol | TCP via oracledb thin mode; connection pooled via SQLAlchemy AsyncEngine |
 | Auth | Service account credentials stored in Kubernetes Secret (sourced from Vault); never hardcoded |
 | Connection pool | Min: 5, Max: 20; pre-ping enabled; pool_recycle: 3600s |
-| Data exchanged | Full CRUD on all tables in HIVE_CORE (INT-01) and HIVE_CHECKIN (INT-02) |
+| Data exchanged | Full CRUD on all tables in IMS_CORE (INT-01) and IMS_CHECKIN (INT-02) |
 | TLS | Oracle Native Network Encryption or TLS listener; enforced in connection string |
 | SLA dependency | Oracle must be available for all write operations; Redis cache can serve auth reads transiently |
 | Error handling | SQLAlchemy `OperationalError` → 503 with retry suggestion; `IntegrityError` → 409 Conflict; connection pool exhaustion → 503 |
@@ -121,8 +120,8 @@
 
 | Integration | Library | Failure Threshold | Break Duration | Half-Open Probe | Fallback Behavior |
 |------------|---------|-------------------|----------------|-----------------|-------------------|
-| INT-01 Oracle HIVE_CORE | `circuitbreaker` (Python) or Resilience4j-equivalent | 5 failures in 30s | 60 seconds | 1 test request | Return 503 `{"error": "Database temporarily unavailable"}` |
-| INT-02 Oracle HIVE_CHECKIN | `circuitbreaker` (Python) | 5 failures in 30s | 60 seconds | 1 test request | Return 503; queue write for retry if idempotent (settings update); alert ops |
+| INT-01 Oracle IMS_CORE | `circuitbreaker` (Python) or Resilience4j-equivalent | 5 failures in 30s | 60 seconds | 1 test request | Return 503 `{"error": "Database temporarily unavailable"}` |
+| INT-02 Oracle IMS_CHECKIN | `circuitbreaker` (Python) | 5 failures in 30s | 60 seconds | 1 test request | Return 503; queue write for retry if idempotent (settings update); alert ops |
 | INT-03 Redis | Inline fallback (no circuit breaker library needed) | 2 consecutive timeouts | Automatic reconnect with exponential backoff | — | Fall back to Oracle session lookup; log degraded mode |
 | INT-04/05 (in-process) | N/A — exception boundary | N/A | N/A | N/A | Return 500; log exception with stack trace |
 | INT-06 Mobile (inbound) | N/A — inbound endpoint | N/A | N/A | N/A | Return appropriate HTTP status; mobile client handles retry |
@@ -186,8 +185,8 @@ All domain events follow this canonical envelope for consistency. If an external
 ```json
 {
   "specversion": "1.0",
-  "type": "com.schreiber.hive.checkin.setting.toggle.changed",
-  "source": "/hive/driver-checkin-admin",
+  "type": "com.enterprise.ims.checkin.setting.toggle.changed",
+  "source": "/IMS/driver-checkin-admin",
   "id": "<uuid-v4>",
   "time": "<ISO-8601-UTC>",
   "datacontenttype": "application/json",
@@ -209,8 +208,8 @@ When a message broker (e.g., Azure Service Bus, Kafka) is introduced, the follow
 
 | Topic Name | Publisher | Subscriber(s) | Trigger |
 |-----------|---------|--------------|---------|
-| `hive.checkin.settings.changed` | Settings Service | TBD (reporting, notifications) | Setting toggle or value change |
-| `hive.checkin.qr.generated` | QR Service | TBD (analytics) | QR code generation |
+| `IMS.checkin.settings.changed` | Settings Service | TBD (reporting, notifications) | Setting toggle or value change |
+| `IMS.checkin.qr.generated` | QR Service | TBD (analytics) | QR code generation |
 
 ---
 
@@ -243,7 +242,7 @@ No inbound webhooks are introduced in Sprints 1–4. This section is reserved fo
 
 // Error (RFC 7807 ProblemDetails)
 {
-  "type": "https://hive.schreiber.com/errors/validation-error",
+  "type": "https://enterprise.com/errors/validation-error",
   "title": "Validation Error",
   "status": 422,
   "detail": "The field 'input_value' is required when toggle is ON.",
@@ -275,7 +274,7 @@ All endpoints are versioned at `/api/v1/`. Breaking changes require a new versio
 | Integration | Control | Implementation |
 |------------|---------|---------------|
 | INT-01/02 Oracle | Credential rotation | Vault-managed secrets; rotation without pod restart via dynamic secrets |
-| INT-01/02 Oracle | Least privilege | App service account has CRUD on HIVE_CHECKIN; read-only on HIVE_CORE where sufficient |
+| INT-01/02 Oracle | Least privilege | App service account has CRUD on IMS_CHECKIN; read-only on IMS_CORE where sufficient |
 | INT-03 Redis | Network isolation | Redis accessible only within AKS cluster network; not exposed externally |
 | INT-03 Redis | Auth | Redis AUTH password; TLS channel |
 | INT-06 Mobile | Token isolation | Mobile JWT `aud=mobile` claim; API Gateway rejects mobile tokens on admin endpoints |

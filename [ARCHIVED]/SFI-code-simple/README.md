@@ -1,6 +1,6 @@
 # Driver Check In Admin — Demo
 
-FastAPI backend + React frontend covering the major flows in `hive-user-flows.md`.
+FastAPI backend + React frontend covering the major flows in `IMS-user-flows.md`.
 
 ## Run
 
@@ -20,8 +20,8 @@ Open http://localhost:5173.
 
 ## Demo accounts
 
-- `admin@schreiber.com` / `admin` → ADMIN
-- `user@schreiber.com` / `user` → STANDARD (will hit 403 on admin pages)
+- `admin@enterprise.com` / `admin` → ADMIN
+- `user@enterprise.com` / `user` → STANDARD (will hit 403 on admin pages)
 
 ## Flows implemented
 
@@ -30,7 +30,7 @@ Open http://localhost:5173.
 | 1 — Login & session | Login | `/login` |
 | 2 — Role enforcement / 403 | Forbidden | `/403` |
 | 3 — Organization Management | Orgs CRUD with create/edit modal & confirm delete | `/admin/organizations` |
-| 4 — HIVE nav + tabs | Top nav, Administration dropdown, multi-tab bar | (persistent) |
+| 4 — IMS nav + tabs | Top nav, Administration dropdown, multi-tab bar | (persistent) |
 | 5–9, 11 — Settings (load, toggle, validate, advanced, QR, errors) | Driver Check In Admin | `/admin/driver-checkin` |
 | 10 — Mobile settings consumption | Mobile preview (phone frame, walks driver through enabled steps only) | `/mobile` |
 | 12 — End-to-end journey | Drive it: log in → orgs → settings → mobile preview | — |

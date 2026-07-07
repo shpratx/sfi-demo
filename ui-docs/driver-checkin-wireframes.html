@@ -3,11 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Driver Check In Admin — The Hive</title>
+<title>Driver Check In Admin — The IMS</title>
 <style>
 /* ══════════════════════════════════════════════════════════════
-   THE HIVE — OFFICIAL DESIGN SYSTEM
-   Source: Schreiber Foods enterprise WMS v2.x
+    IMS - OFFICIAL DESIGN SYSTEM
    Dark chrome · Golden yellow accent · System font · Flat UI
    ══════════════════════════════════════════════════════════════ */
 :root {
@@ -81,7 +80,7 @@ body {
 /* Hex icon (inline SVG) */
 .hex-icon svg { display: block; }
 
-/* Wordmark: THE white, HIVE yellow */
+/* Wordmark: THE white, IMS yellow */
 .wordmark {
   font-size: 18px;
   font-weight: 800;
@@ -89,7 +88,7 @@ body {
   line-height: 1;
 }
 .wordmark .the  { color: var(--text-on-dark); }
-.wordmark .hive { color: var(--yellow); }
+.wordmark .IMS { color: var(--yellow); }
 
 .page-header h1 {
   font-size: 11px;
@@ -207,7 +206,7 @@ body {
   white-space: nowrap;
 }
 .t-wordmark .the  { color: var(--text-on-dark); }
-.t-wordmark .hive { color: var(--yellow); }
+.t-wordmark .IMS { color: var(--yellow); }
 
 /* Tab bar (sits inside topbar) */
 .tab-bar {
@@ -502,7 +501,7 @@ body {
   white-space: nowrap;
   transition: background .12s, border-color .12s, color .12s;
 }
-/* Primary — yellow CTA (matches real Hive UI) */
+/* Primary — yellow CTA (matches real IMS UI) */
 .btn-primary {
   background: var(--yellow);
   color: var(--yellow-text);
@@ -638,7 +637,7 @@ body {
 <!-- ══════════════════════════════════════════════════════════ -->
 <div class="page-header">
   <div class="logo-inline">
-    <!-- Hex icon in Hive yellow -->
+    <!-- Hex icon in IMS yellow -->
     <div class="hex-icon">
       <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M16 3L29 10.5V21.5L16 29L3 21.5V10.5L16 3Z" fill="#F5C518" opacity="0.18"/>
@@ -647,10 +646,10 @@ body {
         <path d="M16 13L19.5 15V19L16 21L12.5 19V15L16 13Z" fill="#F5C518"/>
       </svg>
     </div>
-    <div class="wordmark"><span class="the">THE</span><span class="hive">HIVE</span></div>
+    <div class="wordmark"><span class="the">THE</span><span class="IMS">IMS</span></div>
   </div>
   <h1>Driver Check In Admin</h1>
-  <div class="sub">Administrative Module · Driver Check In Set Up · Schreiber Horizon</div>
+  <div class="sub">Administrative Module · Driver Check In Set Up · IMS Horizon</div>
 </div>
 
 
@@ -659,7 +658,7 @@ body {
 <!-- ══════════════════════════════════════════════════════════ -->
 <div class="sprint-heading">
   <h2>Driver Check In Admin Page — Full Settings View</h2>
-  <p>Administration → Driver Check In Set Up · Admin role only · Opens in new Hive tab</p>
+  <p>Administration → Driver Check In Set Up · Admin role only · Opens in new IMS tab</p>
 </div>
 
 <div class="grid">
@@ -676,7 +675,7 @@ body {
           <path d="M16 13L19.5 15V19L16 21L12.5 19V15L16 13Z" fill="#F5C518"/>
         </svg>
       </div>
-      <div class="t-wordmark"><span class="the">THE</span><span class="hive">HIVE</span></div>
+      <div class="t-wordmark"><span class="the">THE</span><span class="IMS">IMS</span></div>
     </div>
 
     <div class="tab-bar">
@@ -737,7 +736,7 @@ body {
           </div>
           <div class="content-col">
             <div class="setting-name">Organization Name</div>
-            <input class="form-input" type="text" value="Schreiber Foods - Green Bay" disabled>
+            <input class="form-input" type="text" value="Organization - Green Bay" disabled>
             <div class="setting-help">Pre-populated from user login. Toggle always ON.</div>
           </div>
         </div>
@@ -891,7 +890,7 @@ body {
       <div class="frame-note" style="border-radius:3px;margin-top:0">
         <strong>Behaviour:</strong> All text fields auto-save on focus out · Toggles enable/disable both admin page fields AND mobile app steps &nbsp;|&nbsp;
         <strong>Validation:</strong> Empty required fields → "A value is required" · Non-numeric hours → "Numbers only" · Invalid temp format → "Invalid format" &nbsp;|&nbsp;
-        <strong>Access:</strong> Admin role only · Opens in new Hive tab &nbsp;|&nbsp;
+        <strong>Access:</strong> Admin role only · Opens in new IMS tab &nbsp;|&nbsp;
         <strong>A11Y:</strong> All toggles have aria-label · Disabled toggles announced as "always on" · Help text linked via aria-describedby
       </div>
     </main>
@@ -1012,14 +1011,14 @@ body {
             <path d="M16 13L19.5 15V19L16 21L12.5 19V15L16 13Z" fill="#F5C518"/>
           </svg>
         </div>
-        <div class="t-wordmark"><span class="the">THE</span><span class="hive">HIVE</span></div>
+        <div class="t-wordmark"><span class="the">THE</span><span class="IMS">IMS</span></div>
       </div>
     </div>
     <div style="flex:1;background:var(--bg-surface-alt);filter:blur(2px)"></div>
     <div class="modal-overlay">
       <div class="modal-box">
         <div class="modal-title">
-          QR Code for Schreiber Foods - Green Bay<br>Driver Check In Access
+          QR Code for Organization - Green Bay<br>Driver Check In Access
         </div>
         <!-- QR placeholder — updated corner marks to dark #1A1A1A and centre hex in yellow -->
         <div class="qr-placeholder">
@@ -1035,7 +1034,7 @@ body {
             <rect x="10" y="100" width="30" height="30" rx="2" fill="#1A1A1A"/>
             <rect x="14" y="104" width="22" height="22" rx="1" fill="#F5F5F5"/>
             <rect x="18" y="108" width="14" height="14" rx="1" fill="#1A1A1A"/>
-            <!-- Centre Hive hex mark in yellow -->
+            <!-- Centre IMS hex mark in yellow -->
             <rect x="58" y="58" width="24" height="24" rx="2" fill="white" stroke="#E0E0E0" stroke-width="1"/>
             <polygon points="70,62 65,71 75,71" fill="#F5C518"/>
             <polygon points="70,64 66.5,70 73.5,70" fill="#D4A900"/>
@@ -1186,9 +1185,9 @@ body {
 
 <!-- PAGE FOOTER -->
 <div class="page-footer">
-  <strong>The Hive™ — Driver Check In Admin</strong><br>
+  <strong>The IMS™ — Driver Check In Admin</strong><br>
   10 Settings · 3 Validation States · QR Code Modal · Auto-save on Focus Out<br>
-  Design: Official Hive Design System · #F5C518 Yellow · #1A1A1A Dark · #E8E8E8 Page · WCAG 2.1 AA
+  Design: Official IMS Design System · #F5C518 Yellow · #1A1A1A Dark · #E8E8E8 Page · WCAG 2.1 AA
 </div>
 
 <script>

@@ -24,7 +24,7 @@ function ErrorState({ onRetry }: { onRetry: () => void }) {
       <button
         type="button"
         onClick={onRetry}
-        className="h-8 rounded-[3px] bg-hive-yellow px-3.5 text-xs font-semibold text-text-primary hover:bg-hive-yellow-dark"
+        className="h-8 rounded-[3px] bg-ims-yellow px-3.5 text-xs font-semibold text-text-primary hover:bg-ims-yellow-dark"
       >
         Retry
       </button>

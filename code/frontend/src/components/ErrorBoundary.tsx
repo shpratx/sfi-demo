@@ -27,7 +27,7 @@ export class ErrorBoundary extends Component<Props, State> {
           <p className="text-text-secondary">An unexpected error occurred. Please try again.</p>
           <button
             type="button"
-            className="rounded bg-hive-yellow px-4 py-2 font-medium text-text-primary hover:bg-hive-yellow-dark"
+            className="rounded bg-ims-yellow px-4 py-2 font-medium text-text-primary hover:bg-ims-yellow-dark"
             onClick={() => this.setState({ hasError: false })}
           >
             Try again

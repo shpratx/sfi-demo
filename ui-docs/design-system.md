@@ -1,12 +1,11 @@
-# The Hive — Official Design System
-**Schreiber Foods · Enterprise Warehouse Management Platform**
-Version 2.0 · May 2026
+# IMS — Official Design System
+
 
 ---
 
 ## 1. Brand Identity
 
-The Hive is a dark-first, high-density enterprise WMS. The visual language is **precision-industrial**: dark chrome, high-contrast golden yellow on near-black — evoking warehouse control systems and terminal dashboards. The hexagonal logo references the hive/honeycomb motif and industrial precision.
+The IMS is a dark-first, high-density enterprise WMS. The visual language is **precision-industrial**: dark chrome, high-contrast golden yellow on near-black — evoking warehouse control systems and terminal dashboards. The hexagonal logo references the IMS/honeycomb motif and industrial precision.
 
 **Design principles:**
 - Dark surfaces as the default — not a dark mode option
@@ -22,9 +21,9 @@ The Hive is a dark-first, high-density enterprise WMS. The visual language is **
 ### Core Brand
 | Token | Hex | Usage |
 |---|---|---|
-| `--hive-yellow` | `#F5C518` | Primary CTA buttons, active tabs, active nav items, highlights, selected rows, badges |
-| `--hive-yellow-dark` | `#D4A900` | Hover state on yellow buttons |
-| `--hive-yellow-text` | `#1A1A1A` | Text placed ON yellow backgrounds |
+| `--IMS-yellow` | `#F5C518` | Primary CTA buttons, active tabs, active nav items, highlights, selected rows, badges |
+| `--IMS-yellow-dark` | `#D4A900` | Hover state on yellow buttons |
+| `--IMS-yellow-text` | `#1A1A1A` | Text placed ON yellow backgrounds |
 
 ### Surface & Background
 | Token | Hex | Usage |
@@ -75,7 +74,7 @@ The Hive is a dark-first, high-density enterprise WMS. The visual language is **
 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
 ```
 
-The Hive uses a compact, data-dense typographic scale. No decorative or display fonts.
+The IMS uses a compact, data-dense typographic scale. No decorative or display fonts.
 
 | Role | Size | Weight | Color |
 |---|---|---|---|
@@ -120,7 +119,7 @@ Contains: hexagonal logo + wordmark left-aligned, nav menu items horizontally ce
 
 **Logo area:**
 - Hex icon in `#F5C518` gold
-- "THE" in `#FFFFFF`, "HIVE" in `#F5C518`
+- "THE" in `#FFFFFF`, "IMS" in `#F5C518`
 - Font: bold, condensed sans
 
 **Nav items:**
@@ -345,7 +344,7 @@ Used for multi-step flows (e.g. Book Appointment: Step 1 → 2 → 3).
 
 ### 5.8 Chip (Tool / Data tags)
 
-The same chip pattern from the wireframe — adapted to Hive palette.
+The same chip pattern from the wireframe — adapted to IMS palette.
 
 ```css
 .chip {
@@ -399,7 +398,7 @@ The same chip pattern from the wireframe — adapted to Hive palette.
   height: 4px;
   border-radius: 4px 4px 0 0;
 }
-/* WF badge uses Hive yellow tint for active, greyscale for others */
+/* WF badge uses IMS yellow tint for active, greyscale for others */
 .wf-badge {
   display: inline-block;
   padding: 2px 8px;
@@ -445,7 +444,7 @@ Right-side detail panels use:
 
 ## 7. Elevation
 
-The Hive is fundamentally **flat**. Panels and tables sit flush or with 1px borders — no dramatic shadows.
+The IMS is fundamentally **flat**. Panels and tables sit flush or with 1px borders — no dramatic shadows.
 
 ```css
 --shadow-none:  none;
@@ -472,7 +471,7 @@ Hover and active state transitions use `--transition-fast` only. No page-transit
 
 **Official mark:**
 - Hexagonal icon in `#F5C518` gold
-- Wordmark: "THE" in `#FFFFFF`, "HIVE" in `#F5C518`
+- Wordmark: "THE" in `#FFFFFF`, "IMS" in `#F5C518`
 - Font: bold condensed, all-caps
 
 **On dark backgrounds (nav bar):** full colour logo  
@@ -510,4 +509,4 @@ Hover and active state transitions use `--transition-fast` only. No page-transit
 
 ---
 
-*Maintained by Schreiber Horizon Product Team. Reflects The Hive v2.x enterprise application.*
+*Maintained by IMS Product Team. Reflects The IMS v2.x enterprise application.*

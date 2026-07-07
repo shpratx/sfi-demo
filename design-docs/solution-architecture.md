@@ -1,5 +1,4 @@
 # Solution Architecture
-## Driver Check In Admin Module — The Hive (Schreiber Foods)
 **Document Version:** 1.0.0
 **Baseline Reference:** kb-L3-driver-checkin-baseline v0.1.0
 **Status:** Greenfield — all sections authored for Sprint 1–4 scope
@@ -10,10 +9,10 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                         SCHREIBER FOODS ECOSYSTEM                           │
+│                              IMS ECOSYSTEM                                  │
 │                                                                             │
 │  ┌────────────┐      HTTPS/JWT      ┌──────────────────────────────────┐   │
-│  │   HIVE     │◄───────────────────►│     HIVE APPLICATION PLATFORM    │   │
+│  │   IMS     │◄───────────────────►│     IMS APPLICATION PLATFORM    │   │
 │  │   Admin    │                     │                                  │   │
 │  │  (Browser) │                     │  ┌──────────┐  ┌─────────────┐  │   │
 │  └────────────┘                     │  │  React   │  │  FastAPI    │  │   │
@@ -30,8 +29,8 @@
 │  │    App     │                      │  ┌──────────┐  ┌─────────────┐  │  │
 │  └────────────┘                      │  │ Oracle   │  │    Redis    │  │  │
 │                                      │  │  19c DB  │  │   Cache     │  │  │
-│                                      │  │HIVE_CORE │  │  (Session)  │  │  │
-│                                      │  │HIVE_CHKN │  └─────────────┘  │  │
+│                                      │  │IMS_CORE │  │  (Session)  │  │  │
+│                                      │  │IMS_CHKN │  └─────────────┘  │  │
 │                                      │  └──────────┘                   │  │
 │                                      └──────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────────────────────┘
@@ -41,15 +40,15 @@
 
 | Actor | Type | Interaction | Auth Method |
 |-------|------|-------------|-------------|
-| HIVE Admin | Human — internal Schreiber staff | Full admin access: org management, settings, QR generation | JWT RS256 + HttpOnly cookie, ROLE=ADMIN |
-| Standard User | Human — internal Schreiber staff | Read-only or scoped access; gated by RBAC | JWT RS256 + HttpOnly cookie, ROLE=STANDARD |
+| IMS Admin | Human — internal staff | Full admin access: org management, settings, QR generation | JWT RS256 + HttpOnly cookie, ROLE=ADMIN |
+| Standard User | Human — internal staff | Read-only or scoped access; gated by RBAC | JWT RS256 + HttpOnly cookie, ROLE=STANDARD |
 | Driver (Mobile App) | System actor — mobile device | Read settings for their org at check-in time | Separate mobile auth token; read-only endpoint |
 
 ### External Systems
 
 | System | Role | Sprint |
 |--------|------|--------|
-| Oracle 19c | Persistent data store (HIVE_CORE + HIVE_CHECKIN schemas) | 1 |
+| Oracle 19c | Persistent data store (IMS_CORE + IMS_CHECKIN schemas) | 1 |
 | Redis | Session cache, JWT invalidation list | 1 |
 | Python qrcode library | Server-side QR image generation | 3 |
 | ReportLab / WeasyPrint | PDF generation for QR download | 3 |
@@ -60,11 +59,11 @@
 
 | Context | Responsibility | Key Entities | Schema | Sprint |
 |---------|---------------|--------------|--------|--------|
-| **Identity & Auth** | Login, JWT issuance/refresh/revocation, role enforcement, session lifecycle | User, Session, Role, JWT Claim | HIVE_CORE | 1 |
-| **Organization Management** | CRUD for organizations; user-org assignment; per-org isolation boundary | Organization, UserOrganization | HIVE_CORE | 1 |
-| **Driver Check In Settings** | Admin configuration of the 10 check-in settings per org; toggle and input persistence; auto-save; audit trail | DriverCheckinSetting, AuditLog | HIVE_CHECKIN | 2–4 |
+| **Identity & Auth** | Login, JWT issuance/refresh/revocation, role enforcement, session lifecycle | User, Session, Role, JWT Claim | IMS_CORE | 1 |
+| **Organization Management** | CRUD for organizations; user-org assignment; per-org isolation boundary | Organization, UserOrganization | IMS_CORE | 1 |
+| **Driver Check In Settings** | Admin configuration of the 10 check-in settings per org; toggle and input persistence; auto-save; audit trail | DriverCheckinSetting, AuditLog | IMS_CHECKIN | 2–4 |
 | **QR Code & Access** | Generation of org-specific QR codes; PDF packaging; print support | QRCodeArtifact (transient) | — (no persistence; generated on demand) | 3 |
-| **Mobile API** | Read-only projection of settings for the Driver mobile app; isolated auth | MobileSettingsView | HIVE_CHECKIN (read) | 4 |
+| **Mobile API** | Read-only projection of settings for the Driver mobile app; isolated auth | MobileSettingsView | IMS_CHECKIN (read) | 4 |
 
 ### Context Map
 
@@ -91,7 +90,7 @@
 | Backend framework | FastAPI | Latest | Async-first, OpenAPI auto-generation, Pydantic validation (ADR-02) |
 | ORM | SQLAlchemy | 2.x | Oracle dialect support, async sessions (ADR-02) |
 | Database driver | oracledb | Latest | Thin-mode Oracle connection, replaces cx_Oracle (BL6) |
-| Database | Oracle 19c | 19c | Enterprise standard at Schreiber Foods; TDE at rest (ADR-03) |
+| Database | Oracle 19c | 19c | Enterprise standard at the organization; TDE at rest (ADR-03) |
 | Migration framework | Alembic | Latest | Additive-only, zero-downtime migrations (ADR-03a) |
 | Session cache | Redis | 7.x | In-process session store; JWT blocklist on logout (BL6) |
 | Auth mechanism | JWT RS256 + HttpOnly cookie | — | Stateless, XSS-resistant; separate public/private key pair (ADR-04) |
@@ -144,7 +143,7 @@ Browser                        FastAPI Backend                  Oracle / Redis
 
 | Layer | Mechanism | Standard |
 |-------|-----------|----------|
-| Data at rest | Oracle TDE (Transparent Data Encryption) on HIVE_CORE and HIVE_CHECKIN | AES-256 |
+| Data at rest | Oracle TDE (Transparent Data Encryption) on IMS_CORE and IMS_CHECKIN | AES-256 |
 | PII columns | EMAIL in USERS table encrypted at column level via TDE | AES-256 |
 | Data in transit | TLS 1.2+ enforced on all ingress; internal service communication also TLS | TLS 1.2/1.3 |
 | JWT signing | RS256 asymmetric key pair; private key stored in secrets manager | RSA-2048+ |
@@ -159,7 +158,7 @@ Every API request carrying an `X-Organization-Id` header is validated server-sid
 
 ### 4.5 Audit Trail
 
-All setting mutations are written to `AUDIT_LOGS` (Sprint 4, HIVE_CHECKIN schema):
+All setting mutations are written to `AUDIT_LOGS` (Sprint 4, IMS_CHECKIN schema):
 - Captures: `user_id`, `action`, `setting_id`, `old_value`, `new_value`, `timestamp`
 - Immutable append-only pattern; no UPDATE/DELETE on audit rows
 - Satisfies compliance requirement BL14
@@ -173,9 +172,9 @@ All setting mutations are written to `AUDIT_LOGS` (Sprint 4, HIVE_CHECKIN schema
 ```
 ┌─────────────────────── AKS Cluster ────────────────────────────┐
 │                                                                  │
-│  Namespace: hive-checkin                                         │
+│  Namespace: IMS-checkin                                         │
 │  ┌──────────────────┐   ┌──────────────────┐                   │
-│  │  hive-frontend   │   │  hive-backend    │                   │
+│  │  IMS-frontend   │   │  IMS-backend    │                   │
 │  │  (React SPA)     │   │  (FastAPI)       │                   │
 │  │  Nginx container │   │  Uvicorn/Gunicorn│                   │
 │  │  HPA: 2–6 pods   │   │  HPA: 2–8 pods  │                   │
@@ -186,7 +185,7 @@ All setting mutations are written to `AUDIT_LOGS` (Sprint 4, HIVE_CHECKIN schema
 │  │  TLS termination, rate limiting      │                      │
 │  └──────────────────────────────────────┘                      │
 │                                                                  │
-│  Namespace: hive-data (shared / existing)                        │
+│  Namespace: IMS-data (shared / existing)                        │
 │  ┌────────────────┐   ┌────────────────┐                        │
 │  │  Oracle 19c    │   │  Redis 7.x     │                        │
 │  │  (StatefulSet  │   │  (StatefulSet) │                        │
@@ -199,8 +198,8 @@ All setting mutations are written to `AUDIT_LOGS` (Sprint 4, HIVE_CHECKIN schema
 
 | Service | Min Pods | Max Pods | Scale Trigger |
 |---------|----------|----------|---------------|
-| hive-frontend | 2 | 6 | CPU > 70% |
-| hive-backend | 2 | 8 | CPU > 70% / RPS threshold |
+| IMS-frontend | 2 | 6 | CPU > 70% |
+| IMS-backend | 2 | 8 | CPU > 70% / RPS threshold |
 | Redis | 1 | — (single primary + replica) | — |
 
 ### 5.3 Disaster Recovery
@@ -220,12 +219,12 @@ All setting mutations are written to `AUDIT_LOGS` (Sprint 4, HIVE_CHECKIN schema
 ### 6.1 Schema Overview
 
 ```
-HIVE_CORE schema (Sprint 1)
+IMS_CORE schema (Sprint 1)
 ├── USERS           (identity, roles, PII: EMAIL encrypted via TDE)
 ├── ORGANIZATIONS   (org master data)
 └── USER_ORGANIZATIONS (user ↔ org assignment, many-to-many)
 
-HIVE_CHECKIN schema (Sprint 2–4)
+IMS_CHECKIN schema (Sprint 2–4)
 ├── DRIVER_CHECKIN_SETTINGS (10 settings per org, toggle + input value)
 └── AUDIT_LOGS              (immutable change log, Sprint 4)
 ```
@@ -296,7 +295,7 @@ Not introduced in this release. Feature flags may be added in a future sprint if
 
 ### ADR-01: React 18 + TypeScript + Tailwind + Radix UI
 - **Status:** Accepted (Sprint 1)
-- **Context:** Need a modern, accessible, maintainable frontend framework aligned with Schreiber HIVE platform standards.
+- **Context:** Need a modern, accessible, maintainable frontend framework aligned with IMS platform standards.
 - **Decision:** React 18 with TypeScript for type safety; Tailwind CSS for utility-first styling against design tokens (BL11); Radix UI for accessible headless components satisfying WCAG 2.1 AA (BL12).
 - **Consequences:** Slightly higher initial setup; long-term benefits in maintainability, accessibility compliance, and type safety.
 
@@ -306,10 +305,10 @@ Not introduced in this release. Feature flags may be added in a future sprint if
 - **Decision:** FastAPI provides async request handling, automatic OpenAPI documentation, and Pydantic v2 validation. SQLAlchemy 2.x with oracledb driver provides async Oracle connectivity.
 - **Consequences:** Team requires Python/FastAPI proficiency. Async patterns must be applied consistently to avoid event-loop blocking.
 
-### ADR-03: Oracle 19c with Separate Schemas (HIVE_CORE / HIVE_CHECKIN)
+### ADR-03: Oracle 19c with Separate Schemas (IMS_CORE / IMS_CHECKIN)
 - **Status:** Accepted (Sprint 1)
-- **Context:** Schreiber enterprise standard database. Schema separation provides logical isolation between platform-wide identity data and the Driver Check In feature domain.
-- **Decision:** HIVE_CORE for identity/org data (shared with broader HIVE platform). HIVE_CHECKIN for all Driver Check In feature tables. TDE enabled on both schemas.
+- **Context:** the client enterprise standard database. Schema separation provides logical isolation between platform-wide identity data and the Driver Check In feature domain.
+- **Decision:** IMS_CORE for identity/org data (shared with broader IMS platform). IMS_CHECKIN for all Driver Check In feature tables. TDE enabled on both schemas.
 - **Consequences:** Separate schema grants required for app service account. Cross-schema joins must be explicit.
 
 ### ADR-03a: Alembic — Additive-Only Migrations

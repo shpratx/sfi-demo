@@ -2,7 +2,7 @@
 FastAPI backend for the Driver Check In Admin demo.
 
 Demo-only: in-memory store, simple opaque tokens (not real JWT).
-Implements the major flows from hive-user-flows.md: auth + role gating,
+Implements the major flows from ims-user-flows.md: auth + role gating,
 organizations, settings CRUD with validation, QR generation, and a
 mobile-projection endpoint that returns only enabled settings.
 """
@@ -40,14 +40,14 @@ class User(BaseModel):
 
 
 _USERS: dict[str, dict] = {
-    "admin@schreiber.com": {
+    "admin@enterprise.com": {
         "password": "admin",
-        "user": User(id="u1", email="admin@schreiber.com", name="Jane Smith",
+        "user": User(id="u1", email="admin@enterprise.com", name="Jane Smith",
                      role="ADMIN", org_id="org-greenbay"),
     },
-    "user@schreiber.com": {
+    "user@enterprise.com": {
         "password": "user",
-        "user": User(id="u2", email="user@schreiber.com", name="Bob Driver",
+        "user": User(id="u2", email="user@enterprise.com", name="Bob Driver",
                      role="STANDARD", org_id="org-greenbay"),
     },
 }
@@ -110,9 +110,9 @@ class Organization(BaseModel):
 
 
 _ORGS: dict[str, Organization] = {
-    "org-greenbay": Organization(id="org-greenbay", name="Schreiber Foods - Green Bay",
+    "org-greenbay": Organization(id="org-greenbay", name="Organization - Green Bay",
                                  address="123 Main St, Green Bay, WI", phone="555-0142"),
-    "org-shawano": Organization(id="org-shawano", name="Schreiber Foods - Shawano",
+    "org-shawano": Organization(id="org-shawano", name="the organization - Shawano",
                                 address="500 Industrial Dr, Shawano, WI", phone="555-0188"),
 }
 
@@ -160,7 +160,7 @@ def delete_org(org_id: str, user: User = Depends(_require_admin)):
 # Driver Check In Settings (Flows 5–9, 11)
 # ─────────────────────────────────────────────────────────────────────────────
 class Settings(BaseModel):
-    organizationName: str = "Schreiber Foods - Green Bay"
+    organizationName: str = "Organization - Green Bay"
     qrCodeAccess: bool = True
     driverName: bool = True
     driverId: bool = True
@@ -264,7 +264,7 @@ def validate(req: ValidateRequest):
 def generate_qr(user: User = Depends(_require_admin)):
     settings = _settings_for(user.org_id)
     token = uuid.uuid4().hex
-    payload = f"hive://driver-checkin/{user.org_id}?token={token}"
+    payload = f"ims://driver-checkin/{user.org_id}?token={token}"
     img = qrcode.make(payload)
     buf = io.BytesIO()
     img.save(buf, format="PNG")

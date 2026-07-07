@@ -6,7 +6,7 @@ from app.domain.models.base import BaseEntity
 
 class Organization(BaseEntity):
     __tablename__ = "organizations"
-    __table_args__ = {"schema": "hive_core"}
+    __table_args__ = {"schema": "ims_core"}
 
     name = Column(String(200), nullable=False)
     address = Column(String(500), nullable=True)

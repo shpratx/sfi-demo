@@ -1,6 +1,6 @@
-# The Hive — Driver Check-In Admin
+# The IMS — Driver Check-In Admin
 
-A full-stack web application for managing driver check-in workflows, built for the Schreiber Foods HIVE platform.
+A full-stack web application for managing driver check-in workflows, built for the IMS platform.
 
 ## Tech Stack
 
@@ -15,7 +15,7 @@ A full-stack web application for managing driver check-in workflows, built for t
 ## Project Structure
 
 ```
-sfi-demo/code
+ims-demo/code
 ├── backend/
 │   ├── main.py                  # FastAPI app entry point
 │   ├── pyproject.toml

@@ -14,6 +14,6 @@ body {
 }
 
 *:focus-visible {
-  outline: 2px solid var(--hive-yellow);
+  outline: 2px solid var(--ims-yellow);
   outline-offset: 2px;
 }

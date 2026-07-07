@@ -9,11 +9,11 @@
         "story_id": "US-020",
         "feature_id": "F-03.1",
         "title": "Temperature Acknowledgement Toggle with Conditional Input",
-        "user_story": "As an Admin HIVE User, I want to enable a Temperature Acknowledgement setting via a toggle and provide a custom prompt so that drivers are asked to confirm their temperature reading during check-in.",
+        "user_story": "As an Admin IMS User, I want to enable a Temperature Acknowledgement setting via a toggle and provide a custom prompt so that drivers are asked to confirm their temperature reading during check-in.",
         "acceptance_criteria": [
           {
             "id": "AC-020-1",
-            "given": "Given the Admin HIVE User is on the Check-In Settings page",
+            "given": "Given the Admin IMS User is on the Check-In Settings page",
             "when": "When they toggle Temperature Acknowledgement ON",
             "then": "Then a text input for the temperature prompt appears below the toggle with a default placeholder value"
           },
@@ -51,7 +51,7 @@
         "story_id": "US-021",
         "feature_id": "F-03.1",
         "title": "Temperature Validation \u2014 Invalid Format and Required Value",
-        "user_story": "As an Admin HIVE User, I want to see clear validation errors when the temperature prompt is empty or in an invalid format so that I cannot save a misconfigured setting.",
+        "user_story": "As an Admin IMS User, I want to see clear validation errors when the temperature prompt is empty or in an invalid format so that I cannot save a misconfigured setting.",
         "acceptance_criteria": [
           {
             "id": "AC-021-1",
@@ -89,11 +89,11 @@
         "story_id": "US-022",
         "feature_id": "F-03.2",
         "title": "Early Check In Toggle with Hours and Instruction Inputs",
-        "user_story": "As an Admin HIVE User, I want to enable Early Check In via a toggle and configure the allowed hours and driver instructions so that drivers can check in ahead of their scheduled time within controlled limits.",
+        "user_story": "As an Admin IMS User, I want to enable Early Check In via a toggle and configure the allowed hours and driver instructions so that drivers can check in ahead of their scheduled time within controlled limits.",
         "acceptance_criteria": [
           {
             "id": "AC-022-1",
-            "given": "Given the Admin HIVE User is on the Check-In Settings page",
+            "given": "Given the Admin IMS User is on the Check-In Settings page",
             "when": "When they toggle Early Check In ON",
             "then": "Then a numeric input for 'Hours before scheduled time' and a text area for 'Driver instructions' appear below the toggle"
           },
@@ -132,7 +132,7 @@
         "story_id": "US-023",
         "feature_id": "F-03.2",
         "title": "Early Check In Validation \u2014 Numbers Only, Required Value, Default Text",
-        "user_story": "As an Admin HIVE User, I want validation on the Early Check In fields so that only valid numeric hours and non-empty instructions can be saved.",
+        "user_story": "As an Admin IMS User, I want validation on the Early Check In fields so that only valid numeric hours and non-empty instructions can be saved.",
         "acceptance_criteria": [
           {
             "id": "AC-023-1",
@@ -176,11 +176,11 @@
         "story_id": "US-024",
         "feature_id": "F-03.3",
         "title": "Confirmation Step Toggle with Customizable Success Text",
-        "user_story": "As an Admin HIVE User, I want to enable a Confirmation Step via a toggle and customise the success message so that drivers see a branded completion screen after check-in.",
+        "user_story": "As an Admin IMS User, I want to enable a Confirmation Step via a toggle and customise the success message so that drivers see a branded completion screen after check-in.",
         "acceptance_criteria": [
           {
             "id": "AC-024-1",
-            "given": "Given the Admin HIVE User is on the Check-In Settings page",
+            "given": "Given the Admin IMS User is on the Check-In Settings page",
             "when": "When they toggle Confirmation Step ON",
             "then": "Then a text area for the success message appears below the toggle with a default success message pre-populated"
           },
@@ -227,11 +227,11 @@
         "story_id": "US-025",
         "feature_id": "F-04.1",
         "title": "QR Code Setting Toggle and Generate Button",
-        "user_story": "As an Admin HIVE User, I want to enable QR Code generation via a toggle and click a Generate button so that a unique QR code is created for my facility's driver check-in.",
+        "user_story": "As an Admin IMS User, I want to enable QR Code generation via a toggle and click a Generate button so that a unique QR code is created for my facility's driver check-in.",
         "acceptance_criteria": [
           {
             "id": "AC-025-1",
-            "given": "Given the Admin HIVE User is on the Check-In Settings page",
+            "given": "Given the Admin IMS User is on the Check-In Settings page",
             "when": "When they toggle QR Code ON",
             "then": "Then a 'Generate QR Code' button appears below the toggle"
           },
@@ -267,7 +267,7 @@
         "story_id": "US-026",
         "feature_id": "F-04.1",
         "title": "QR Code Modal with Org-Specific Title and QR Image",
-        "user_story": "As an Admin HIVE User, I want to see the generated QR code in a modal dialog with my organisation's name so that I can preview and share the code before printing.",
+        "user_story": "As an Admin IMS User, I want to see the generated QR code in a modal dialog with my organisation's name so that I can preview and share the code before printing.",
         "acceptance_criteria": [
           {
             "id": "AC-026-1",
@@ -312,7 +312,7 @@
         "story_id": "US-027",
         "feature_id": "F-04.2",
         "title": "QR Code Generation Backend Service",
-        "user_story": "As an Admin HIVE User, I want the system to generate a unique QR code for my facility so that drivers can scan it to begin the check-in process.",
+        "user_story": "As an Admin IMS User, I want the system to generate a unique QR code for my facility so that drivers can scan it to begin the check-in process.",
         "acceptance_criteria": [
           {
             "id": "AC-027-1",
@@ -349,7 +349,7 @@
         "story_id": "US-028",
         "feature_id": "F-04.3",
         "title": "Save as PDF Download and Print Dialog",
-        "user_story": "As an Admin HIVE User, I want to save the QR code as a PDF or print it directly from the modal so that I can post the code at my facility for drivers to scan.",
+        "user_story": "As an Admin IMS User, I want to save the QR code as a PDF or print it directly from the modal so that I can post the code at my facility for drivers to scan.",
         "acceptance_criteria": [
           {
             "id": "AC-028-1",
@@ -397,7 +397,7 @@
         "story_id": "US-029",
         "feature_id": "F-05.1",
         "title": "Mobile Read-Only Settings API Endpoint",
-        "user_story": "As a Standard HIVE User (mobile driver), I want the mobile app to retrieve the current check-in settings for my facility so that I see only the steps that the admin has enabled.",
+        "user_story": "As a Standard IMS User (mobile driver), I want the mobile app to retrieve the current check-in settings for my facility so that I see only the steps that the admin has enabled.",
         "acceptance_criteria": [
           {
             "id": "AC-029-1",
@@ -435,7 +435,7 @@
         "story_id": "US-030",
         "feature_id": "F-05.1",
         "title": "Toggle OFF on Admin Excludes Setting from Mobile Response",
-        "user_story": "As a Standard HIVE User (mobile driver), I want disabled settings to be absent from the mobile API response so that I am not shown check-in steps that are turned off.",
+        "user_story": "As a Standard IMS User (mobile driver), I want disabled settings to be absent from the mobile API response so that I am not shown check-in steps that are turned off.",
         "acceptance_criteria": [
           {
             "id": "AC-030-1",
@@ -475,7 +475,7 @@
         "story_id": "US-031",
         "feature_id": "F-05.2",
         "title": "SAST and Dependency Security Scan \u2014 Zero Critical/High",
-        "user_story": "As an Admin HIVE User, I want the platform to pass static application security testing and dependency vulnerability scans with zero critical or high findings so that the system meets organisational security standards.",
+        "user_story": "As an Admin IMS User, I want the platform to pass static application security testing and dependency vulnerability scans with zero critical or high findings so that the system meets organisational security standards.",
         "acceptance_criteria": [
           {
             "id": "AC-031-1",
@@ -511,7 +511,7 @@
         "story_id": "US-032",
         "feature_id": "F-05.2",
         "title": "WCAG 2.1 AA Accessibility Audit on All Pages",
-        "user_story": "As an Admin HIVE User, I want all pages to pass a WCAG 2.1 AA accessibility audit so that the platform is usable by people with disabilities and meets compliance requirements.",
+        "user_story": "As an Admin IMS User, I want all pages to pass a WCAG 2.1 AA accessibility audit so that the platform is usable by people with disabilities and meets compliance requirements.",
         "acceptance_criteria": [
           {
             "id": "AC-032-1",
@@ -553,7 +553,7 @@
         "story_id": "US-033",
         "feature_id": "F-05.3",
         "title": "API Failure Handling with Error Toast and Retry",
-        "user_story": "As an Admin HIVE User, I want to see a clear error notification when an API call fails and have the option to retry so that I can recover from transient errors without losing my work.",
+        "user_story": "As an Admin IMS User, I want to see a clear error notification when an API call fails and have the option to retry so that I can recover from transient errors without losing my work.",
         "acceptance_criteria": [
           {
             "id": "AC-033-1",
@@ -589,7 +589,7 @@
         "story_id": "US-034",
         "feature_id": "F-05.3",
         "title": "Audit Logging for All Setting Changes",
-        "user_story": "As an Admin HIVE User, I want all check-in setting changes to be recorded in an audit log so that there is a traceable history of who changed what and when.",
+        "user_story": "As an Admin IMS User, I want all check-in setting changes to be recorded in an audit log so that there is a traceable history of who changed what and when.",
         "acceptance_criteria": [
           {
             "id": "AC-034-1",
@@ -631,7 +631,7 @@
         "story_id": "US-035",
         "feature_id": "F-05.3",
         "title": "Optimistic Locking for Concurrent Edits",
-        "user_story": "As an Admin HIVE User, I want the system to prevent my changes from silently overwriting another admin's concurrent edits so that no configuration changes are lost.",
+        "user_story": "As an Admin IMS User, I want the system to prevent my changes from silently overwriting another admin's concurrent edits so that no configuration changes are lost.",
         "acceptance_criteria": [
           {
             "id": "AC-035-1",

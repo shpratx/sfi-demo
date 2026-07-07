@@ -8,7 +8,7 @@ class User(BaseEntity):
     __tablename__ = "users"
     __table_args__ = (
         CheckConstraint("role IN ('ADMIN', 'STANDARD')", name="ck_users_role"),
-        {"schema": "hive_core"},
+        {"schema": "ims_core"},
     )
 
     email = Column(String(200), unique=True, nullable=False)

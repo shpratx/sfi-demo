@@ -8,12 +8,12 @@ from app.infrastructure.database import Base
 
 class AuditLog(Base):
     __tablename__ = "audit_logs"
-    __table_args__ = {"schema": "hive_checkin"}
+    __table_args__ = {"schema": "ims_checkin"}
 
     id = Column(Uuid, primary_key=True, default=uuid.uuid4)
-    user_id = Column(Uuid, ForeignKey("hive_core.users.id"), nullable=False)
-    org_id = Column(Uuid, ForeignKey("hive_core.organizations.id"), nullable=False)
-    setting_id = Column(Uuid, ForeignKey("hive_checkin.driver_checkin_settings.id"), nullable=True)
+    user_id = Column(Uuid, ForeignKey("ims_core.users.id"), nullable=False)
+    org_id = Column(Uuid, ForeignKey("ims_core.organizations.id"), nullable=False)
+    setting_id = Column(Uuid, ForeignKey("ims_checkin.driver_checkin_settings.id"), nullable=True)
     action = Column(String(50), nullable=False)
     old_value = Column(String(2000), nullable=True)
     new_value = Column(String(2000), nullable=True)

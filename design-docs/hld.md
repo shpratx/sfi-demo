@@ -1,5 +1,4 @@
 # High-Level Design (HLD)
-## Driver Check In Admin Module — The Hive (Schreiber Foods)
 **Document Version:** 1.0.0
 **Baseline Reference:** kb-L3-driver-checkin-baseline v0.1.0
 **Epic Coverage:** EP-01 through EP-05 (Sprints 1–4)
@@ -21,8 +20,8 @@ graph TB
         GW[API Gateway / Nginx Ingress\nTLS termination · Rate limiting · CORS]
     end
 
-    subgraph hive-checkin namespace
-        FE[hive-frontend\nReact 18 · TypeScript · Tailwind\nNginx static host\nHPA: 2–6 pods]
+    subgraph IMS-checkin namespace
+        FE[IMS-frontend\nReact 18 · TypeScript · Tailwind\nNginx static host\nHPA: 2–6 pods]
 
         subgraph FastAPI Backend
             AUTH[Auth Service\nJWT RS256 · HttpOnly cookie\nBcrypt · Rate limiter]
@@ -33,11 +32,11 @@ graph TB
             AUDITLOG[Audit Logger\nAsync write\nAppend-only]
         end
 
-        BE[hive-backend\nFastAPI · Uvicorn/Gunicorn\nHPA: 2–8 pods]
+        BE[IMS-backend\nFastAPI · Uvicorn/Gunicorn\nHPA: 2–8 pods]
     end
 
-    subgraph hive-data namespace
-        ORA[(Oracle 19c\nHIVE_CORE schema\nHIVE_CHECKIN schema\nTDE at rest)]
+    subgraph IMS-data namespace
+        ORA[(Oracle 19c\nIMS_CORE schema\nIMS_CHECKIN schema\nTDE at rest)]
         REDIS[(Redis 7.x\nSession cache\nJWT blocklist\nSettings cache)]
     end
 
@@ -127,7 +126,7 @@ sequenceDiagram
     alt Cache hit
         REDIS-->>SETTINGS: cached settings array
     else Cache miss
-        SETTINGS->>ORA: SELECT * FROM HIVE_CHECKIN.DRIVER_CHECKIN_SETTINGS\nWHERE ORG_ID = :org_id AND IS_DELETED = 0
+        SETTINGS->>ORA: SELECT * FROM IMS_CHECKIN.DRIVER_CHECKIN_SETTINGS\nWHERE ORG_ID = :org_id AND IS_DELETED = 0
         ORA-->>SETTINGS: 10 setting rows
         SETTINGS->>REDIS: SET settings:{org_id} TTL=30s
     end
@@ -178,7 +177,7 @@ sequenceDiagram
 
     B->>GW: POST /api/v1/driver-checkin/qr-code\nCookie: access_token
     GW->>QRSVC: forward + validate JWT (ADMIN role required)
-    QRSVC->>ORA: SELECT name FROM HIVE_CORE.ORGANIZATIONS\nWHERE ID = :org_id
+    QRSVC->>ORA: SELECT name FROM IMS_CORE.ORGANIZATIONS\nWHERE ID = :org_id
     ORA-->>QRSVC: org_name
     QRSVC->>QRLIB: generate_qr(url=mobile_checkin_url_for_org)
     QRLIB-->>QRSVC: PNG bytes (BytesIO, in-process)
@@ -212,7 +211,7 @@ sequenceDiagram
     alt Cache hit (30s TTL)
         REDIS-->>MAPI: filtered settings
     else Cache miss
-        MAPI->>ORA: SELECT setting_name, input_value\nFROM HIVE_CHECKIN.DRIVER_CHECKIN_SETTINGS\nWHERE ORG_ID = :org_id\n  AND TOGGLE_STATE = 1\n  AND IS_DELETED = 0
+        MAPI->>ORA: SELECT setting_name, input_value\nFROM IMS_CHECKIN.DRIVER_CHECKIN_SETTINGS\nWHERE ORG_ID = :org_id\n  AND TOGGLE_STATE = 1\n  AND IS_DELETED = 0
         ORA-->>MAPI: enabled settings only
         MAPI->>REDIS: SET mobile_settings:{org_id} TTL=30s
     end
@@ -285,21 +284,21 @@ stateDiagram-v2
 ```mermaid
 graph TB
     subgraph AKS Cluster
-        subgraph ns-hive-checkin [Namespace: hive-checkin]
-            subgraph fe-deploy [hive-frontend Deployment]
+        subgraph ns-IMS-checkin [Namespace: IMS-checkin]
+            subgraph fe-deploy [IMS-frontend Deployment]
                 FE1[Pod 1\nNginx + React SPA]
                 FE2[Pod 2\nNginx + React SPA]
                 FEn[Pod n\nHPA max: 6]
             end
-            subgraph be-deploy [hive-backend Deployment]
+            subgraph be-deploy [IMS-backend Deployment]
                 BE1[Pod 1\nFastAPI + Uvicorn]
                 BE2[Pod 2\nFastAPI + Uvicorn]
                 BEn[Pod n\nHPA max: 8]
             end
             ING[Ingress Controller\nNginx · TLS 1.3\nRead: 200 req/min/user\nWrite: 50 req/min/user]
         end
-        subgraph ns-hive-data [Namespace: hive-data — shared]
-            ORA[(Oracle 19c StatefulSet\nor Managed Oracle\nHIVE_CORE + HIVE_CHECKIN\nTDE enabled)]
+        subgraph ns-IMS-data [Namespace: IMS-data — shared]
+            ORA[(Oracle 19c StatefulSet\nor Managed Oracle\nIMS_CORE + IMS_CHECKIN\nTDE enabled)]
             REDIS_P[(Redis Primary\nStatefulSet)]
             REDIS_R[(Redis Replica\nStatefulSet)]
         end
@@ -321,12 +320,12 @@ graph TB
 
 | Service | Image Base | Port | Resources (request/limit) | Probes |
 |---------|-----------|------|--------------------------|--------|
-| hive-frontend | nginx:alpine (multi-stage: node:20-alpine build → nginx serve) | 80 | 100m/500m CPU · 128Mi/256Mi | `/` (200) |
-| hive-backend | python:3.12-slim | 8000 | 250m/1000m CPU · 256Mi/512Mi | `/health` · `/health/ready` |
-| hive-worker | python:3.12-slim (Celery worker) | — | 250m/1000m CPU · 256Mi/512Mi | Celery inspect ping |
-| hive-scheduler | python:3.12-slim (Celery Beat) | — | 100m/500m CPU · 128Mi/256Mi | — |
+| IMS-frontend | nginx:alpine (multi-stage: node:20-alpine build → nginx serve) | 80 | 100m/500m CPU · 128Mi/256Mi | `/` (200) |
+| IMS-backend | python:3.12-slim | 8000 | 250m/1000m CPU · 256Mi/512Mi | `/health` · `/health/ready` |
+| IMS-worker | python:3.12-slim (Celery worker) | — | 250m/1000m CPU · 256Mi/512Mi | Celery inspect ping |
+| IMS-scheduler | python:3.12-slim (Celery Beat) | — | 100m/500m CPU · 128Mi/256Mi | — |
 
-> `hive-worker` and `hive-scheduler` are required by EA6 for async task processing (audit log writes, cache warm-up tasks). All images: non-root user, <200MB, health check defined.
+> `IMS-worker` and `IMS-scheduler` are required by EA6 for async task processing (audit log writes, cache warm-up tasks). All images: non-root user, <200MB, health check defined.
 
 ### Rolling Deployment Strategy
 - `strategy.type: RollingUpdate`

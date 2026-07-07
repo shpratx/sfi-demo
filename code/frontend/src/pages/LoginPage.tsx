@@ -50,7 +50,7 @@ export default function LoginPage() {
             <path d="M16 8.5L23 12.75V21.25L16 25.5L9 21.25V12.75L16 8.5Z" fill="#F5C518" opacity="0.45"/>
             <path d="M16 13L19.5 15V19L16 21L12.5 19V15L16 13Z" fill="#F5C518"/>
           </svg>
-          <span className="text-lg font-extrabold tracking-wide"><span className="text-white">THE</span><span className="text-hive-yellow">HIVE</span></span>
+          <span className="text-lg font-extrabold tracking-wide"><span className="text-white">THE</span><span className="text-ims-yellow">IMS</span></span>
         </div>
 
         {error && (
@@ -87,7 +87,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="mt-4 w-full h-8 rounded-[3px] bg-hive-yellow text-xs font-semibold text-text-primary"
+          className="mt-4 w-full h-8 rounded-[3px] bg-ims-yellow text-xs font-semibold text-text-primary"
         >
           Log In
         </button>

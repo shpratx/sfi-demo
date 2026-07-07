@@ -1,5 +1,4 @@
 # User Flow Diagrams
-## Driver Check In Admin Module — The Hive (Schreiber Foods)
 **Document Version:** 1.0.0
 **Baseline Reference:** kb-L3-driver-checkin-baseline v0.1.0
 **Wireframes Reference:** driver-checkin-complete-wireframes.html (✅ Complete — all epics)
@@ -17,7 +16,7 @@
 | 1 | Authentication — Login & Session Lifecycle | EP-01 | 1 | Admin / Standard User |
 | 2 | Role Enforcement & Access Control | EP-01 | 1 | Admin / Standard User |
 | 3 | Organization Management | EP-01 | 1 | Admin |
-| 4 | HIVE Navigation & Tab System | EP-01 | 1 | Admin |
+| 4 | IMS Navigation & Tab System | EP-01 | 1 | Admin |
 | 5 | Settings Page Load & Display | EP-02 | 2 | Admin |
 | 6 | Toggle a Setting (Core Flow) | EP-02 | 2 | Admin |
 | 7 | Auto-Save & Validation (Input Field) | EP-02 | 2 | Admin |
@@ -60,7 +59,7 @@
                   ▼                      │ "Account locked for  │
          ┌──────────────────┐            │  15 minutes"         │
          │ Redirect to      │            └──────────────────────┘
-         │ HIVE main page   │
+         │ IMS main page   │
          │ (role-aware nav) │
          └────────┬─────────┘
                   │
@@ -129,7 +128,7 @@ LOGOUT PATH (US-002)
 
 ## Flow 2: Role Enforcement & Access Control
 **Features:** F-01.2 | **Stories:** US-003, US-004
-**Screens:** HIVE nav (all), 403 `/403`
+**Screens:** IMS nav (all), 403 `/403`
 
 ```
   User authenticates (→ Flow 1)
@@ -189,7 +188,7 @@ LOGOUT PATH (US-002)
 **Screen:** Organization Management `/admin/organizations`
 
 ```
-  Admin in HIVE
+  Admin in IMS
          │
          │ Administration menu → "Organizations"
          ▼
@@ -201,7 +200,7 @@ LOGOUT PATH (US-002)
   │ │ [ + New Organization ]          │    │
   │ ├─────────────────────────────────┤    │
   │ │ Org Name   Address   Phone  [⋮] │    │
-  │ │ Schreiber  123 Main  555-…  [⋮] │    │
+  │ │ the client  123 Main  555-…  [⋮] │    │
   │ └─────────────────────────────────┘    │
   └──────────────┬──────────────────────────┘
                  │
@@ -262,16 +261,16 @@ LOGOUT PATH (US-002)
 
 ---
 
-## Flow 4: HIVE Navigation & Tab System
+## Flow 4: IMS Navigation & Tab System
 **Features:** F-01.4 | **Stories:** US-007, US-008
-**Screen:** All HIVE screens (nav bar persistent)
+**Screen:** All IMS screens (nav bar persistent)
 
 ```
   Admin authenticated (role = ADMIN)
          │
          ▼
   ┌────────────────────────────────────────────────────────┐
-  │  HIVE Top Navigation Bar                               │
+  │  IMS Top Navigation Bar                               │
   │  [EP-01 · F-01.4]                                     │
   │                                                        │
   │  [Logo]  [Home]  [Administration ▾]  [User] [Logout]  │
@@ -293,7 +292,7 @@ LOGOUT PATH (US-002)
 "Driver Check In Set Up"        "Organizations"
      │                               │
      ▼                               ▼
-Opens new HIVE tab              Opens new HIVE tab
+Opens new IMS tab              Opens new IMS tab
 Tab title:                      Tab title:
 "Driver Check In Admin"         "Organizations"
 Route: /admin/driver-checkin    Route: /admin/organizations
@@ -307,7 +306,7 @@ TAB MANAGEMENT
          │
          │ Click tab header → switch to that tab
          │ Click [×] on tab → close tab
-         │ Close last tab → return to HIVE home
+         │ Close last tab → return to IMS home
          ▼
   ┌────────────────────────────────────────────────────────┐
   │  [Driver Check In Admin ×]  [Organizations ×]  [+]    │
@@ -359,7 +358,7 @@ TAB MANAGEMENT
   │                                                              │
   │  Setting Name              Toggle    Input / Action          │
   │  ─────────────────────────────────────────────────────────  │
-  │  Organization Name         [ON 🔒]   [Schreiber Foods    ]  │
+  │  Organization Name         [ON 🔒]   [the organization    ]  │
   │  QR Code Check In Access   [ON  ]    [ Generate QR Code ]   │
   │  Driver Name               [ON 🔒]   —                      │
   │  Driver ID                 [ON  ]    —                       │
@@ -863,12 +862,12 @@ NETWORK OFFLINE PATH (EP-05)
 ---
 
 ## Flow 12: End-to-End Admin Journey (Composite)
-**Epics:** EP-01 through EP-05 | **Actor:** Admin HIVE User
+**Epics:** EP-01 through EP-05 | **Actor:** Admin IMS User
 
 This flow shows the complete journey for a new admin configuring a new organization from first login through full settings configuration and QR code deployment.
 
 ```
-START: Admin receives HIVE credentials
+START: Admin receives IMS credentials
          │
          ▼
    ┌────────────┐
@@ -877,7 +876,7 @@ START: Admin receives HIVE credentials
    └─────┬──────┘
          │
          ▼
-   HIVE Main Page
+   IMS Main Page
    Administration menu visible (ADMIN role)
          │
          │ Administration → Organizations
@@ -892,7 +891,7 @@ START: Admin receives HIVE credentials
             │ Administration → Driver Check In Set Up
             ▼
    ┌─────────────────┐
-   │ New HIVE tab    │  ← Flow 4
+   │ New IMS tab    │  ← Flow 4
    │ "Driver Check   │
    │  In Admin"      │
    └────────┬────────┘
@@ -962,7 +961,7 @@ END: Facility operational with configured Driver Check In
 | Login | `/login` | EP-01 | 1 | 1 | US-001, US-002 |
 | 403 Forbidden | `/403` | EP-01 | 2 | 1 | US-004 |
 | Organization Management | `/admin/organizations` | EP-01 | 3 | 1 | US-005, US-006 |
-| HIVE Nav + Tab Bar | (persistent) | EP-01 | 4 | 1 | US-007, US-008 |
+| IMS Nav + Tab Bar | (persistent) | EP-01 | 4 | 1 | US-007, US-008 |
 | Driver Check In Admin — Settings | `/admin/driver-checkin` | EP-02–04 | 5, 6, 7, 8, 9, 11 | 2–3 | US-009–019 + EP-03/04 |
 | QR Code Modal | (overlay on `/admin/driver-checkin`) | EP-04 | 9 | 3 | EP-04 scope |
 | Mobile Settings API | (API only, no admin UI) | EP-05 | 10 | 4 | EP-05 scope |

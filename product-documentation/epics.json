@@ -1,5 +1,5 @@
 {
-  "product_name": "Driver Check In App \u2014 Administrative Module (The Hive, Schreiber Foods)",
+  "product_name": "Driver Check In App \u2014 Administrative Module",
   "total_epics": 5,
   "total_features": 18,
   "delivery_sprints": 4,
@@ -7,7 +7,7 @@
     {
       "epic_id": "EP-01",
       "title": "Platform Foundation, Auth & Organization Setup",
-      "description": "Build the technical foundation: authentication, role management (Admin vs Standard), organization data model, and the HIVE navigation framework with tab system. At sprint end: admin users can log in, see the Administration menu, and manage organizations.",
+      "description": "Build the technical foundation: authentication, role management (Admin vs Standard), organization data model, and the IMS navigation framework with tab system. At sprint end: admin users can log in, see the Administration menu, and manage organizations.",
       "sprint": 1,
       "requirements_covered": [
         "FR-17",
@@ -19,8 +19,8 @@
         "User authentication (email/password or SSO)",
         "Role management (Admin, Standard User)",
         "Organization CRUD and user-org assignment",
-        "HIVE Administration menu with dropdown navigation",
-        "In-app tab system (open pages in new HIVE tabs)",
+        "IMS Administration menu with dropdown navigation",
+        "In-app tab system (open pages in new IMS tabs)",
         "Health endpoints",
         "CI/CD pipeline, Docker setup"
       ],
@@ -74,7 +74,7 @@
         },
         {
           "feature_id": "F-01.4",
-          "title": "HIVE Navigation Framework & Tab System",
+          "title": "IMS Navigation Framework & Tab System",
           "description": "Administration menu with dropdown options. In-app tab system \u2014 selecting 'Driver Check In Set Up' opens a new tab with title 'Driver Check In Admin'. Tab management (open, close, switch).",
           "requirements_covered": [
             "FR-01"
@@ -610,5 +610,5 @@
     }
   ],
   "uncovered_requirements": [],
-  "delivery_summary": "The Driver Check In Admin Module is decomposed into 5 epics across 4 sprints. Sprint 1 (EP-01) builds the foundation: auth, roles, org model, and HIVE navigation with tab system \u2014 deployable as v0.1. Sprint 2 (EP-02) delivers the settings framework with auto-save, validation, and the 6 core settings (Org, Driver Name/ID/Phone/Truck, Carrier Approval) \u2014 deployable as v0.2 with a functional admin page. Sprint 3 (EP-03 + EP-04) completes the admin page: 3 advanced settings (Temperature, Early Check In, Confirmation) plus QR code generation with PDF/Print \u2014 deployable as v0.3 with all 10 settings and QR capability. Sprint 4 (EP-05) adds the mobile API, security/accessibility audit, and production hardening \u2014 deployable as v1.0 GA. All 26 FRs covered across 18 features."
+  "delivery_summary": "The Driver Check In Admin Module is decomposed into 5 epics across 4 sprints. Sprint 1 (EP-01) builds the foundation: auth, roles, org model, and IMS navigation with tab system \u2014 deployable as v0.1. Sprint 2 (EP-02) delivers the settings framework with auto-save, validation, and the 6 core settings (Org, Driver Name/ID/Phone/Truck, Carrier Approval) \u2014 deployable as v0.2 with a functional admin page. Sprint 3 (EP-03 + EP-04) completes the admin page: 3 advanced settings (Temperature, Early Check In, Confirmation) plus QR code generation with PDF/Print \u2014 deployable as v0.3 with all 10 settings and QR capability. Sprint 4 (EP-05) adds the mobile API, security/accessibility audit, and production hardening \u2014 deployable as v1.0 GA. All 26 FRs covered across 18 features."
 }

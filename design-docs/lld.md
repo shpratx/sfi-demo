@@ -1,5 +1,4 @@
 # Low-Level Design (LLD)
-## Driver Check In Admin Module — The Hive (Schreiber Foods)
 **Document Version:** 1.0.0
 **Baseline Reference:** kb-L3-driver-checkin-baseline v0.1.0
 **Epic Coverage:** EP-01 through EP-05 (Sprints 1–4)
@@ -97,9 +96,9 @@ classDiagram
 
 ---
 
-### 2.1 HIVE_CORE Schema (Sprint 1) [EP-01]
+### 2.1 IMS_CORE Schema (Sprint 1) [EP-01]
 
-#### HIVE_CORE.USERS
+#### IMS_CORE.USERS
 
 | Column | Oracle Type | Constraints | Notes |
 |--------|------------|-------------|-------|
@@ -120,14 +119,14 @@ classDiagram
 
 **Indexes:**
 ```sql
-CREATE UNIQUE INDEX UX_USERS_EMAIL ON HIVE_CORE.USERS (EMAIL) WHERE IS_DELETED = 0;
-CREATE INDEX IX_USERS_ROLE ON HIVE_CORE.USERS (ROLE);
-CREATE INDEX IX_USERS_IS_ACTIVE ON HIVE_CORE.USERS (IS_ACTIVE);
+CREATE UNIQUE INDEX UX_USERS_EMAIL ON IMS_CORE.USERS (EMAIL) WHERE IS_DELETED = 0;
+CREATE INDEX IX_USERS_ROLE ON IMS_CORE.USERS (ROLE);
+CREATE INDEX IX_USERS_IS_ACTIVE ON IMS_CORE.USERS (IS_ACTIVE);
 ```
 
 ---
 
-#### HIVE_CORE.ORGANIZATIONS
+#### IMS_CORE.ORGANIZATIONS
 
 | Column | Oracle Type | Constraints | Notes |
 |--------|------------|-------------|-------|
@@ -145,13 +144,13 @@ CREATE INDEX IX_USERS_IS_ACTIVE ON HIVE_CORE.USERS (IS_ACTIVE);
 
 **Indexes:**
 ```sql
-CREATE UNIQUE INDEX UX_ORGANIZATIONS_NAME ON HIVE_CORE.ORGANIZATIONS (NAME) WHERE IS_DELETED = 0;
-CREATE INDEX IX_ORGANIZATIONS_IS_ACTIVE ON HIVE_CORE.ORGANIZATIONS (IS_ACTIVE);
+CREATE UNIQUE INDEX UX_ORGANIZATIONS_NAME ON IMS_CORE.ORGANIZATIONS (NAME) WHERE IS_DELETED = 0;
+CREATE INDEX IX_ORGANIZATIONS_IS_ACTIVE ON IMS_CORE.ORGANIZATIONS (IS_ACTIVE);
 ```
 
 ---
 
-#### HIVE_CORE.USER_ORGANIZATIONS
+#### IMS_CORE.USER_ORGANIZATIONS
 
 | Column | Oracle Type | Constraints | Notes |
 |--------|------------|-------------|-------|
@@ -167,21 +166,21 @@ CREATE INDEX IX_ORGANIZATIONS_IS_ACTIVE ON HIVE_CORE.ORGANIZATIONS (IS_ACTIVE);
 
 **Indexes:**
 ```sql
-CREATE UNIQUE INDEX UX_USER_ORG ON HIVE_CORE.USER_ORGANIZATIONS (USER_ID, ORG_ID) WHERE IS_DELETED = 0;
-CREATE INDEX IX_USER_ORGANIZATIONS_USER_ID ON HIVE_CORE.USER_ORGANIZATIONS (USER_ID);
-CREATE INDEX IX_USER_ORGANIZATIONS_ORG_ID ON HIVE_CORE.USER_ORGANIZATIONS (ORG_ID);
+CREATE UNIQUE INDEX UX_USER_ORG ON IMS_CORE.USER_ORGANIZATIONS (USER_ID, ORG_ID) WHERE IS_DELETED = 0;
+CREATE INDEX IX_USER_ORGANIZATIONS_USER_ID ON IMS_CORE.USER_ORGANIZATIONS (USER_ID);
+CREATE INDEX IX_USER_ORGANIZATIONS_ORG_ID ON IMS_CORE.USER_ORGANIZATIONS (ORG_ID);
 ```
 
 ---
 
-### 2.2 HIVE_CHECKIN Schema (Sprints 2–4) [EP-02–EP-05]
+### 2.2 IMS_CHECKIN Schema (Sprints 2–4) [EP-02–EP-05]
 
-#### HIVE_CHECKIN.DRIVER_CHECKIN_SETTINGS
+#### IMS_CHECKIN.DRIVER_CHECKIN_SETTINGS
 
 | Column | Oracle Type | Constraints | Notes |
 |--------|------------|-------------|-------|
 | ID | RAW(16) | PK | UUID |
-| ORG_ID | RAW(16) | NOT NULL · FK → HIVE_CORE.ORGANIZATIONS.ID | Per-org isolation key |
+| ORG_ID | RAW(16) | NOT NULL · FK → IMS_CORE.ORGANIZATIONS.ID | Per-org isolation key |
 | SETTING_NAME | VARCHAR2(100) | NOT NULL | Enum: see seed data below |
 | TOGGLE_STATE | NUMBER(1) | NOT NULL DEFAULT 0 | 0=OFF, 1=ON |
 | TOGGLE_LOCKED | NUMBER(1) | NOT NULL DEFAULT 0 | 1=admin cannot change |
@@ -197,9 +196,9 @@ CREATE INDEX IX_USER_ORGANIZATIONS_ORG_ID ON HIVE_CORE.USER_ORGANIZATIONS (ORG_I
 
 **Indexes:**
 ```sql
-CREATE UNIQUE INDEX UX_DCS_ORG_SETTING ON HIVE_CHECKIN.DRIVER_CHECKIN_SETTINGS (ORG_ID, SETTING_NAME) WHERE IS_DELETED = 0;
-CREATE INDEX IX_DCS_ORG_ID ON HIVE_CHECKIN.DRIVER_CHECKIN_SETTINGS (ORG_ID);
-CREATE INDEX IX_DCS_TOGGLE_STATE ON HIVE_CHECKIN.DRIVER_CHECKIN_SETTINGS (ORG_ID, TOGGLE_STATE);
+CREATE UNIQUE INDEX UX_DCS_ORG_SETTING ON IMS_CHECKIN.DRIVER_CHECKIN_SETTINGS (ORG_ID, SETTING_NAME) WHERE IS_DELETED = 0;
+CREATE INDEX IX_DCS_ORG_ID ON IMS_CHECKIN.DRIVER_CHECKIN_SETTINGS (ORG_ID);
+CREATE INDEX IX_DCS_TOGGLE_STATE ON IMS_CHECKIN.DRIVER_CHECKIN_SETTINGS (ORG_ID, TOGGLE_STATE);
 ```
 
 **Seed Data per Organization (10 rows, seeded on org creation):**
@@ -221,13 +220,13 @@ CREATE INDEX IX_DCS_TOGGLE_STATE ON HIVE_CHECKIN.DRIVER_CHECKIN_SETTINGS (ORG_ID
 
 ---
 
-#### HIVE_CHECKIN.AUDIT_LOGS [EP-05 · F-05.3 · US-034]
+#### IMS_CHECKIN.AUDIT_LOGS [EP-05 · F-05.3 · US-034]
 
 | Column | Oracle Type | Constraints | Notes |
 |--------|------------|-------------|-------|
 | ID | RAW(16) | PK | UUID |
-| USER_ID | RAW(16) | NOT NULL · FK → HIVE_CORE.USERS.ID | Who made the change |
-| ORG_ID | RAW(16) | NOT NULL · FK → HIVE_CORE.ORGANIZATIONS.ID | Which org |
+| USER_ID | RAW(16) | NOT NULL · FK → IMS_CORE.USERS.ID | Who made the change |
+| ORG_ID | RAW(16) | NOT NULL · FK → IMS_CORE.ORGANIZATIONS.ID | Which org |
 | SETTING_ID | RAW(16) | NULL · FK → DRIVER_CHECKIN_SETTINGS.ID | Which setting (null for org-level events) |
 | ACTION | VARCHAR2(50) | NOT NULL | 'TOGGLE_CHANGE', 'VALUE_CHANGE', 'SETTING_CREATED' |
 | OLD_VALUE | VARCHAR2(2000) | NULL | Serialized previous value |
@@ -240,9 +239,9 @@ CREATE INDEX IX_DCS_TOGGLE_STATE ON HIVE_CHECKIN.DRIVER_CHECKIN_SETTINGS (ORG_ID
 
 **Indexes:**
 ```sql
-CREATE INDEX IX_AUDIT_ORG_TIMESTAMP ON HIVE_CHECKIN.AUDIT_LOGS (ORG_ID, TIMESTAMP DESC);
-CREATE INDEX IX_AUDIT_USER_ID ON HIVE_CHECKIN.AUDIT_LOGS (USER_ID);
-CREATE INDEX IX_AUDIT_SETTING_ID ON HIVE_CHECKIN.AUDIT_LOGS (SETTING_ID);
+CREATE INDEX IX_AUDIT_ORG_TIMESTAMP ON IMS_CHECKIN.AUDIT_LOGS (ORG_ID, TIMESTAMP DESC);
+CREATE INDEX IX_AUDIT_USER_ID ON IMS_CHECKIN.AUDIT_LOGS (USER_ID);
+CREATE INDEX IX_AUDIT_SETTING_ID ON IMS_CHECKIN.AUDIT_LOGS (SETTING_ID);
 ```
 
 ---
@@ -252,25 +251,25 @@ CREATE INDEX IX_AUDIT_SETTING_ID ON HIVE_CHECKIN.AUDIT_LOGS (SETTING_ID);
 ### Sprint 1 — Initial Schema Creation (Greenfield)
 
 ```sql
--- Migration: 001_create_hive_core_schema.sql
-CREATE USER HIVE_CORE IDENTIFIED BY ... DEFAULT TABLESPACE users;
-GRANT CREATE SESSION, CREATE TABLE, CREATE INDEX TO HIVE_CORE;
+-- Migration: 001_create_IMS_core_schema.sql
+CREATE USER IMS_CORE IDENTIFIED BY ... DEFAULT TABLESPACE users;
+GRANT CREATE SESSION, CREATE TABLE, CREATE INDEX TO IMS_CORE;
 
-CREATE TABLE HIVE_CORE.USERS (...);  -- as defined above
-CREATE TABLE HIVE_CORE.ORGANIZATIONS (...);
-CREATE TABLE HIVE_CORE.USER_ORGANIZATIONS (...);
+CREATE TABLE IMS_CORE.USERS (...);  -- as defined above
+CREATE TABLE IMS_CORE.ORGANIZATIONS (...);
+CREATE TABLE IMS_CORE.USER_ORGANIZATIONS (...);
 -- All indexes created in same migration
 ```
 
-### Sprint 2 — HIVE_CHECKIN Schema
+### Sprint 2 — IMS_CHECKIN Schema
 
 ```sql
--- Migration: 002_create_hive_checkin_schema.sql
-CREATE USER HIVE_CHECKIN IDENTIFIED BY ... DEFAULT TABLESPACE users;
-GRANT SELECT ON HIVE_CORE.ORGANIZATIONS TO HIVE_CHECKIN;
-GRANT SELECT ON HIVE_CORE.USERS TO HIVE_CHECKIN;
+-- Migration: 002_create_IMS_checkin_schema.sql
+CREATE USER IMS_CHECKIN IDENTIFIED BY ... DEFAULT TABLESPACE users;
+GRANT SELECT ON IMS_CORE.ORGANIZATIONS TO IMS_CHECKIN;
+GRANT SELECT ON IMS_CORE.USERS TO IMS_CHECKIN;
 
-CREATE TABLE HIVE_CHECKIN.DRIVER_CHECKIN_SETTINGS (...);
+CREATE TABLE IMS_CHECKIN.DRIVER_CHECKIN_SETTINGS (...);
 -- Indexes created in same migration
 -- Seed data INSERT via separate seed script triggered post-migration
 ```
@@ -279,7 +278,7 @@ CREATE TABLE HIVE_CHECKIN.DRIVER_CHECKIN_SETTINGS (...);
 
 ```sql
 -- Migration: 003_add_audit_logs.sql  [Additive only — zero-downtime safe]
-CREATE TABLE HIVE_CHECKIN.AUDIT_LOGS (...);
+CREATE TABLE IMS_CHECKIN.AUDIT_LOGS (...);
 -- Indexes created in same migration
 -- No changes to existing tables
 ```
@@ -409,7 +408,7 @@ AUTH: role=ADMIN required
 BUSINESS LOGIC:
   SELECT o.*, (SELECT COUNT(*) FROM USER_ORGANIZATIONS uo
                WHERE uo.org_id = o.id AND uo.is_deleted = 0) AS user_count
-  FROM HIVE_CORE.ORGANIZATIONS o
+  FROM IMS_CORE.ORGANIZATIONS o
   WHERE o.is_deleted = 0
   ORDER BY o.name ASC
   OFFSET (page-1)*page_size ROWS FETCH NEXT page_size ROWS ONLY
@@ -450,9 +449,9 @@ VALIDATION:
 
 BUSINESS LOGIC: [SERIALIZABLE isolation]
   1. Check unique name constraint
-  2. INSERT INTO HIVE_CORE.ORGANIZATIONS (id=uuid4(), name, address, phone,
+  2. INSERT INTO IMS_CORE.ORGANIZATIONS (id=uuid4(), name, address, phone,
        is_active=1, created_by=current_user_id, ...)
-  3. Seed 10 settings rows in HIVE_CHECKIN.DRIVER_CHECKIN_SETTINGS
+  3. Seed 10 settings rows in IMS_CHECKIN.DRIVER_CHECKIN_SETTINGS
      (one INSERT per setting with defaults — see seed data table)
      ORGANIZATION_NAME setting: input_value = org.name
   4. return 201 with created org
@@ -498,7 +497,7 @@ INPUT: org id (path param)
 AUTH: role=ADMIN required
 
 BUSINESS LOGIC: [READ COMMITTED]
-  1. Soft-delete: UPDATE HIVE_CORE.ORGANIZATIONS SET is_deleted = 1 WHERE id = :id
+  1. Soft-delete: UPDATE IMS_CORE.ORGANIZATIONS SET is_deleted = 1 WHERE id = :id
   2. Cascade soft-delete: UPDATE USER_ORGANIZATIONS SET is_deleted = 1 WHERE org_id = :id
   3. Soft-delete settings: UPDATE DRIVER_CHECKIN_SETTINGS SET is_deleted = 1 WHERE org_id = :id
   4. return 204
@@ -556,7 +555,7 @@ AUTH: role=ADMIN required; org_id from JWT
 BUSINESS LOGIC:
   1. Check Redis: GET settings:{org_id}
   2. IF cache miss:
-       SELECT * FROM HIVE_CHECKIN.DRIVER_CHECKIN_SETTINGS
+       SELECT * FROM IMS_CHECKIN.DRIVER_CHECKIN_SETTINGS
        WHERE org_id = :org_id AND is_deleted = 0
        ORDER BY display_order ASC
        [READ COMMITTED]
@@ -671,9 +670,9 @@ INPUT: Headers: Idempotency-Key: {UUID}  (required on all POST per EA3)
 AUTH: role=ADMIN required
 
 BUSINESS LOGIC:
-  1. SELECT name FROM HIVE_CORE.ORGANIZATIONS WHERE id = :org_id
+  1. SELECT name FROM IMS_CORE.ORGANIZATIONS WHERE id = :org_id
   2. Construct mobile check-in URL:
-       url = f"https://hive.schreiber.com/checkin/{org_id}"
+       url = f"https://enterprise.com/checkin/{org_id}"
   3. qr = qrcode.QRCode(version=1, error_correction=ERROR_CORRECT_L, box_size=10, border=4)
      qr.add_data(url)
      qr.make(fit=True)
@@ -736,7 +735,7 @@ BUSINESS LOGIC:
   3. Check Redis: GET mobile_settings:{org_id}
   4. IF cache miss:
        SELECT setting_name, input_value
-       FROM HIVE_CHECKIN.DRIVER_CHECKIN_SETTINGS
+       FROM IMS_CHECKIN.DRIVER_CHECKIN_SETTINGS
        WHERE org_id = :org_id
          AND toggle_state = 1
          AND is_deleted = 0
@@ -793,7 +792,7 @@ AUTH: role=ADMIN, org_id from JWT
 
 BUSINESS LOGIC:
   SELECT al.*
-  FROM HIVE_CHECKIN.AUDIT_LOGS al
+  FROM IMS_CHECKIN.AUDIT_LOGS al
   WHERE al.org_id = :org_id
     AND (:setting_id IS NULL OR al.setting_id = :setting_id)
     AND (:from_date IS NULL OR al.timestamp >= :from_date)
@@ -862,7 +861,7 @@ All error responses follow RFC 7807 ProblemDetails:
 ```python
 # FastAPI exception handler — all errors use this envelope
 class ProblemDetail(BaseModel):
-    type: str           # e.g. "https://hive.schreiber.com/errors/validation-error"
+    type: str           # e.g. "https://enterprise.com/errors/validation-error"
     title: str          # human-readable
     status: int         # HTTP status code
     detail: str         # specific description
@@ -890,7 +889,7 @@ class ProblemDetail(BaseModel):
 ## 8. Python Module Structure
 
 ```
-hive-backend/
+IMS-backend/
 ├── main.py                        # FastAPI app creation, startup/shutdown lifespan
 ├── pyproject.toml                 # Dependencies (Poetry); pinned versions per EA16
 │
@@ -951,8 +950,8 @@ hive-backend/
 ├── migrations/                    # Alembic migrations (EA2 naming)
 │   ├── env.py
 │   └── versions/
-│       ├── 001_create_hive_core_schema.py
-│       ├── 002_create_hive_checkin_schema.py
+│       ├── 001_create_IMS_core_schema.py
+│       ├── 002_create_IMS_checkin_schema.py
 │       └── 003_add_audit_logs.py
 │
 └── tests/
@@ -985,7 +984,7 @@ from datetime import datetime, timezone
 
 class User(Base):
     __tablename__ = "USERS"
-    __table_args__ = {"schema": "HIVE_CORE"}
+    __table_args__ = {"schema": "IMS_CORE"}
 
     id = Column(RAW(16), primary_key=True, default=lambda: uuid.uuid4().bytes)
     email = Column(String(200), nullable=False, unique=True)  # TDE encrypted at Oracle layer
@@ -1009,10 +1008,10 @@ class User(Base):
 # app/domain/models/setting.py
 class DriverCheckinSetting(Base):
     __tablename__ = "DRIVER_CHECKIN_SETTINGS"
-    __table_args__ = {"schema": "HIVE_CHECKIN"}
+    __table_args__ = {"schema": "IMS_CHECKIN"}
 
     id = Column(RAW(16), primary_key=True, default=lambda: uuid.uuid4().bytes)
-    org_id = Column(RAW(16), ForeignKey("HIVE_CORE.ORGANIZATIONS.ID"), nullable=False)
+    org_id = Column(RAW(16), ForeignKey("IMS_CORE.ORGANIZATIONS.ID"), nullable=False)
     setting_name = Column(String(100), nullable=False)
     toggle_state = Column(Boolean, nullable=False, default=False)
     toggle_locked = Column(Boolean, nullable=False, default=False)
@@ -1032,12 +1031,12 @@ class DriverCheckinSetting(Base):
 # app/domain/models/audit_log.py
 class AuditLog(Base):
     __tablename__ = "AUDIT_LOGS"
-    __table_args__ = {"schema": "HIVE_CHECKIN"}
+    __table_args__ = {"schema": "IMS_CHECKIN"}
 
     id = Column(RAW(16), primary_key=True, default=lambda: uuid.uuid4().bytes)
-    user_id = Column(RAW(16), ForeignKey("HIVE_CORE.USERS.ID"), nullable=False)
-    org_id = Column(RAW(16), ForeignKey("HIVE_CORE.ORGANIZATIONS.ID"), nullable=False)
-    setting_id = Column(RAW(16), ForeignKey("HIVE_CHECKIN.DRIVER_CHECKIN_SETTINGS.ID"), nullable=True)
+    user_id = Column(RAW(16), ForeignKey("IMS_CORE.USERS.ID"), nullable=False)
+    org_id = Column(RAW(16), ForeignKey("IMS_CORE.ORGANIZATIONS.ID"), nullable=False)
+    setting_id = Column(RAW(16), ForeignKey("IMS_CHECKIN.DRIVER_CHECKIN_SETTINGS.ID"), nullable=True)
     action = Column(String(50), nullable=False)
     old_value = Column(String(2000), nullable=True)
     new_value = Column(String(2000), nullable=True)
@@ -1052,7 +1051,7 @@ class AuditLog(Base):
 ## 10a. Frontend Module Structure
 
 ```
-hive-frontend/
+IMS-frontend/
 ├── src/
 │   ├── app/                        # App shell, providers, router (EA2/EA10)
 │   │   ├── App.tsx                 # Root: QueryClientProvider + ZustandProvider + RouterProvider

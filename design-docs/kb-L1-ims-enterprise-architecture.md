@@ -1,6 +1,6 @@
-# Enterprise Architecture Standards — The Hive - Predictive Expiry & Waste Prevention Engine (Schreiber Foods)
-### kb-L1-hive-enterprise-architecture v1.0.0
-### This KB defines the enterprise-level architecture standards for The Hive - Predictive Expiry & Waste Prevention Engine. All design and construction agents MUST ground their decisions in these standards.
+# Enterprise Architecture Standards
+### kb-L1-IMS-enterprise-architecture v1.0.0
+### This KB defines the enterprise-level architecture standards for IMS - Predictive Expiry & Waste Prevention Engine. All design and construction agents MUST ground their decisions in these standards.
 
 ---
 
@@ -174,7 +174,7 @@ async def business_rule_handler(request: Request, exc: BusinessRuleError):
 
 ### Base URL Pattern
 - Development: `http://localhost:8000/api/v1/{resource}`
-- Production: `https://api.hive.schreiber.com/api/v1/{resource}`
+- Production: `https://api.enterprise.com/api/v1/{resource}`
 
 ### REST Conventions
 - Resource names: plural nouns (`/lots`, `/alerts`, `/work-orders`)
@@ -194,7 +194,7 @@ async def business_rule_handler(request: Request, exc: BusinessRuleError):
 ### Error Response (RFC 7807)
 ```json
 {
-  "type": "https://api.hive.schreiber.com/errors/business-rule-violation",
+  "type": "https://api.enterprise.com/errors/business-rule-violation",
   "title": "Lot Already Expired",
   "status": 422,
   "detail": "Lot BN-2026-0042 expired on 2026-04-28 and cannot be reprioritized.",
@@ -241,12 +241,12 @@ async def business_rule_handler(request: Request, exc: BusinessRuleError):
 **Schema per Domain:**
 | Schema | Tables | Purpose |
 |--------|--------|---------|
-| `HIVE_CORE` | FACILITIES, USERS, ROLES, USER_ROLES | Core identity & multi-tenancy |
-| `HIVE_INVENTORY` | PRODUCTS, LOTS, LOT_MOVEMENTS, CONSUMPTION_RECORDS | Inventory management |
-| `HIVE_SCORING` | RISK_SCORES, SCORING_HISTORY, VELOCITY_CACHE | Predictive engine data |
-| `HIVE_ALERTS` | ALERTS, ALERT_ACKNOWLEDGMENTS, ALERT_THRESHOLDS | Alert management |
-| `HIVE_PRODUCTION` | WORK_ORDERS, WO_INGREDIENTS, SCHEDULING_SUGGESTIONS | Production planning |
-| `HIVE_REPORTING` | WASTE_EVENTS, WASTE_METRICS, AUDIT_LOGS | Reporting & compliance |
+| `IMS_CORE` | FACILITIES, USERS, ROLES, USER_ROLES | Core identity & multi-tenancy |
+| `IMS_INVENTORY` | PRODUCTS, LOTS, LOT_MOVEMENTS, CONSUMPTION_RECORDS | Inventory management |
+| `IMS_SCORING` | RISK_SCORES, SCORING_HISTORY, VELOCITY_CACHE | Predictive engine data |
+| `IMS_ALERTS` | ALERTS, ALERT_ACKNOWLEDGMENTS, ALERT_THRESHOLDS | Alert management |
+| `IMS_PRODUCTION` | WORK_ORDERS, WO_INGREDIENTS, SCHEDULING_SUGGESTIONS | Production planning |
+| `IMS_REPORTING` | WASTE_EVENTS, WASTE_METRICS, AUDIT_LOGS | Reporting & compliance |
 
 **Mandatory Columns (all tables):**
 ```sql
@@ -278,7 +278,7 @@ CREATE OR REPLACE PACKAGE BODY PKG_SCORING AS
   BEGIN
     -- Bulk score all active lots in facility
     FORALL i IN 1..l_lots.COUNT
-      INSERT INTO HIVE_SCORING.RISK_SCORES (LOT_ID, RISK_SCORE, DAYS_TO_EXPIRY, VELOCITY, SCORED_AT)
+      INSERT INTO IMS_SCORING.RISK_SCORES (LOT_ID, RISK_SCORE, DAYS_TO_EXPIRY, VELOCITY, SCORED_AT)
       VALUES (l_lots(i).id, l_scores(i), l_days(i), l_velocities(i), SYSTIMESTAMP);
     p_scored_count := SQL%ROWCOUNT;
     COMMIT;
@@ -356,10 +356,10 @@ END PKG_SCORING;
 - Each component is a separate Docker container:
   | Container | Base Image | Port |
   |-----------|-----------|------|
-  | hive-api | python:3.12-slim | 8000 |
-  | hive-frontend | node:20-alpine (build) → nginx:alpine (serve) | 3000 |
-  | hive-worker | python:3.12-slim (Celery) | — |
-  | hive-scheduler | python:3.12-slim (Celery Beat) | — |
+  | IMS-api | python:3.12-slim | 8000 |
+  | IMS-frontend | node:20-alpine (build) → nginx:alpine (serve) | 3000 |
+  | IMS-worker | python:3.12-slim (Celery) | — |
+  | IMS-scheduler | python:3.12-slim (Celery Beat) | — |
   | redis | redis:7-alpine | 6379 |
 
 - Oracle DB: managed service (Oracle Cloud or on-premise) — not containerized
@@ -512,7 +512,7 @@ engine = create_engine(
 
 ## EA11: Design System Standards
 
-### Based on Schreiber Horizon Brand
+### Based on IMS Brand
 - Primary: `#F7A800` (amber/gold)
 - Dark: `#1A1A2E` (deep navy)
 - Neutrals: 50–900 scale

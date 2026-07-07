@@ -8,10 +8,10 @@ class DriverCheckinSetting(BaseEntity):
     __tablename__ = "driver_checkin_settings"
     __table_args__ = (
         Index("ix_driver_checkin_settings_org_id", "org_id"),
-        {"schema": "hive_checkin"},
+        {"schema": "ims_checkin"},
     )
 
-    org_id = Column(Uuid, ForeignKey("hive_core.organizations.id"), nullable=False)
+    org_id = Column(Uuid, ForeignKey("ims_core.organizations.id"), nullable=False)
     setting_name = Column(String(100), nullable=False)
     toggle_state = Column(Boolean, default=False, nullable=False)
     toggle_locked = Column(Boolean, default=False, nullable=False)

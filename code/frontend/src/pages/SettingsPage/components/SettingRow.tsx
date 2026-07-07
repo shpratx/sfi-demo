@@ -53,8 +53,8 @@ const VALIDATORS: Record<string, (v: string) => string | null> = {
   },
 };
 
-const inputBase = "w-full h-[30px] rounded-[3px] border border-border-input px-2 text-xs text-text-primary mt-1 focus:outline-none focus:border-hive-yellow focus:shadow-[0_0_0_2px_rgba(245,197,24,0.2)]";
-const textareaBase = "w-full h-16 rounded-[3px] border border-border-input px-2 py-[7px] text-xs text-text-primary mt-1 resize-y focus:outline-none focus:border-hive-yellow focus:shadow-[0_0_0_2px_rgba(245,197,24,0.2)]";
+const inputBase = "w-full h-[30px] rounded-[3px] border border-border-input px-2 text-xs text-text-primary mt-1 focus:outline-none focus:border-ims-yellow focus:shadow-[0_0_0_2px_rgba(245,197,24,0.2)]";
+const textareaBase = "w-full h-16 rounded-[3px] border border-border-input px-2 py-[7px] text-xs text-text-primary mt-1 resize-y focus:outline-none focus:border-ims-yellow focus:shadow-[0_0_0_2px_rgba(245,197,24,0.2)]";
 
 export default function SettingRow({
   setting,
@@ -105,7 +105,7 @@ export default function SettingRow({
           disabled={setting.toggleLocked}
           aria-label={label + (setting.toggleLocked ? " — always on" : "")}
           className={`relative h-[22px] w-10 rounded-full transition-colors ${
-            setting.toggleState ? "bg-hive-yellow" : "bg-border-input"
+            setting.toggleState ? "bg-ims-yellow" : "bg-border-input"
           } ${setting.toggleLocked ? "cursor-not-allowed opacity-45" : "cursor-pointer"}`}
         >
           <Switch.Thumb className="block h-4 w-4 translate-x-[3px] rounded-full bg-white shadow-[0_1px_3px_rgba(0,0,0,0.25)] transition-transform data-[state=checked]:translate-x-[21px]" />
